@@ -35,6 +35,7 @@ public class Voxspell extends JPanel {
 			@Override
 			public void run(){
 				createAndShowGUI();
+				// a change
 			}
 		});
 	}
