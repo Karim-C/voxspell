@@ -1,0 +1,20 @@
+package voxspell.tools;
+
+import java.util.concurrent.TimeUnit;
+
+public class TextReader {
+	
+	public void read(String cmd) {
+		try {
+			ProcessBuilder builder = new ProcessBuilder("/bin/bash","-c" , "echo " + cmd +  " | festival --tts");
+			Process process= builder.start();
+			process.waitFor(5000, TimeUnit.MILLISECONDS);
+			process.destroy();
+			
+			
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+}

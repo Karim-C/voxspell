@@ -1,0 +1,49 @@
+package voxspell.tools;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class FileReader {
+	public ArrayList<String> getWordList(int level) {
+		ArrayList<String> wordList = readInWords(level);
+		
+		return null;
+		
+	}
+	
+	private ArrayList<String> readInWords(int level) {
+		
+		ArrayList<String> wordList = new ArrayList<String>();
+		String filename = "NZCER-spelling-lists.txt";
+		String levelID = "%Level " + level;
+		
+		// The file is read into standard in
+		try {
+			System.setIn(new FileInputStream(filename));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		Scanner sc = new Scanner(System.in);
+		
+		while(sc.hasNext()) {
+			String line = sc.nextLine();
+			
+			if (line.equals(levelID)) {
+				levelID = "%Level " + (level + 1);
+				while(sc.hasNext()) {
+					line = sc.nextLine();
+					if (line.equals(levelID)) {
+						break;
+					}
+					wordList.add(sc.nextLine());
+				}
+			}
+		}
+		sc.close();
+		
+		return wordList;
+	}
+}
