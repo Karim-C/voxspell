@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;TextToSpeech.java&apos; to &apos;Voxspell_prototype/src/voxspell.tools&apos;&#x0A;- Original project: &apos;Spelling Aid&apos;&#x0A;- Destination element: &apos;Voxspell_prototype/src/voxspell.tools&apos;&#x0A;- Original element: &apos;spellingaid.tools.TextToSpeech.java&apos;" description="Copy compilation unit" destination="=Voxspell_prototype/src&lt;voxspell.tools" element1="/src&lt;spellingaid.tools{TextToSpeech.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1473202823376" units="1" version="1.0"/>
+</session>

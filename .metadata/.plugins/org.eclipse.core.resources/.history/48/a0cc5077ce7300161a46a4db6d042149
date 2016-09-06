@@ -1,0 +1,5 @@
+package voxspell.tools;
+
+public class FileReader {
+
+}

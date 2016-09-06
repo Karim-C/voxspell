@@ -1,0 +1,10 @@
+package voxspell;
+
+public class SpellingQuiz extends JPanel {
+
+	public void newQuiz()  {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

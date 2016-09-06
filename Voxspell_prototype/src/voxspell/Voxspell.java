@@ -26,9 +26,9 @@ public class Voxspell extends JPanel {
 
 	// Main menu panel and the overall (Spelling Aid) panel
 	private JPanel mainMenuPanel, overallPanel;
-	
+
 	private SpellingQuiz spellingQuiz;
-	
+
 	// Names for main menu buttons
 	private static final String MAIN_MENU = "Return to main menu";
 	private static final String NEW_QUIZ = "New Spelling Quiz";
@@ -45,7 +45,7 @@ public class Voxspell extends JPanel {
 	private CardLayout cardLayout = new CardLayout();
 
 	public Voxspell() {  
-				
+
 		/* Create base panels for the program */
 		createMainMenuPanel();
 		createNewQuizPanel();
@@ -59,11 +59,11 @@ public class Voxspell extends JPanel {
 		this.add(overallPanel);
 		// A CHANGE
 	}
-	
+
 	private void createMainMenuPanel() {
 		mainMenuPanel = new JPanel();
 		mainMenuPanel.setBorder(BorderFactory.createTitledBorder("Welcome to the Spelling Aid"));
-		
+
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(4,1));
 		buttonPanel.add(_newSpellingQuizBtn);
@@ -73,37 +73,29 @@ public class Voxspell extends JPanel {
 
 		createMainMenuEventHandlers();
 	}
-	
+
 	private void createNewQuizPanel() {
 		spellingQuiz = new SpellingQuiz();
 		spellingQuiz.add(new ReturnToMainMenuButton(), BorderLayout.SOUTH);
-		
+
 	}
-	
+
 	private void createMainMenuEventHandlers() {
-		_newSpellingQuizBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				cardLayout.show(overallPanel, NEW_QUIZ);
-				spellingQuiz.newQuiz();
-			}
+		_newSpellingQuizBtn.addActionListener( (ActionListener) -> {
+			cardLayout.show(overallPanel, NEW_QUIZ);
+			spellingQuiz.newQuiz();
 		});
 
-		_viewStatsBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				cardLayout.show(overallPanel, VIEW_STATS);
-		//		viewStatsPanel.generateAndShowStats();
-			}
+		_viewStatsBtn.addActionListener( (ActionListener) -> {
+			cardLayout.show(overallPanel, VIEW_STATS);
+			//		viewStatsPanel.generateAndShowStats(); // will show entire history of stats 
+			// session stats will always be showing
 		});
 
-		_clearStatsBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (!areYouSure("Clear statistics")){
-					return;
-				}
-		//		clearStats();
+		_clearStatsBtn.addActionListener( (ActionListener) -> {
+			if (!areYouSure("Clear statistics")){
+				return;
+				//		clearStats(); // seperate ones for clearing session stats vs. entire history?
 			}
 		});
 	}
@@ -134,9 +126,9 @@ public class Voxspell extends JPanel {
 			}
 		});
 	}
-	
+
 	/**
-	 * Promps the user with a YES_NO JOptionPane if they want to proceed with a menu selection or not.
+	 * Prompts the user with a YES_NO JOptionPane if they want to proceed with a menu selection or not.
 	 * 
 	 * Got the code here: http://stackoverflow.com/a/15853127/6122976
 	 */
@@ -147,7 +139,7 @@ public class Voxspell extends JPanel {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Represents a JButton allowing the user to return to the main menu.
 	 * Nested because it needs access to private fields.
@@ -155,16 +147,14 @@ public class Voxspell extends JPanel {
 	private class ReturnToMainMenuButton extends JButton{
 
 		public ReturnToMainMenuButton(){
-			super("Return to Main Menu");
-			
-			this.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (!areYouSure("Return to the main menu")){
-						return;
-					}
-					cardLayout.show(overallPanel, MAIN_MENU);
+			super("Return to Main Menu"); // name of button
+
+			this.addActionListener( (ActionListener) -> {
+				if (!areYouSure("Return to the main menu")){ // dialog popup
+					return;
 				}
+				cardLayout.show(overallPanel, MAIN_MENU);
+
 			});
 		}
 	}
