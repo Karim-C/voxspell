@@ -2,9 +2,12 @@ package voxspell;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -17,10 +20,10 @@ public class SpellingQuiz extends JPanel {
 	private JButton _newQuizBtn;
 	protected JTextArea _programOutputArea;
 	
-	private static int[] levels;
-	{
-		levels = { 1 };
-	}
+	// game logic
+	private int level;
+	
+	private static final String[] levels = {"1","2","3","4","5","6","7","8","9","10"}; // better way?
 	
 	/**
 	 * Gets the file name from the sub type, then creates the GUI.
@@ -53,16 +56,38 @@ public class SpellingQuiz extends JPanel {
 		// New quiz button, only available after a quiz has completed
 		_newQuizBtn = new JButton("New Quiz");
 		this.add(_newQuizBtn, BorderLayout.EAST);
-
+		
+		addEventHandlers();	
 	}
 	
 	public void newQuiz()  {
 		// popup asking for level
-		
+		String whatLevel = (String) JOptionPane.showInputDialog(this, 
+				"What level to start at?",
+				"What level?",
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				levels,
+				levels[0]);
 		
 		// 
-		int level = 10;
+		level = Integer.parseInt(whatLevel);
 		this.setBorder(BorderFactory.createTitledBorder("Level " + level));
+		// read file for level
+	}
+	
+	private void addEventHandlers() {
+		/* 
+		 *remove this button, user gets option to proceed after completing quiz.
+		 */
+		_newQuizBtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				newQuiz();
+			}
+		});
+		
 	}
 
 	
