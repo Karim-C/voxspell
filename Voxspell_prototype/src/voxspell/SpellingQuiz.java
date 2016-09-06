@@ -23,7 +23,7 @@ public class SpellingQuiz extends JPanel {
 	// game logic
 	private int level;
 	
-	private static final String[] levels = {"1","2","3","4","5","6","7","8","9","10"}; // better way?
+	private static final String[] levels = {"1","2","3","4","5","6","7","8","9","10"}; //k better way?
 	
 	/**
 	 * Gets the file name from the sub type, then creates the GUI.
