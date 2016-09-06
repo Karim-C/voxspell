@@ -57,6 +57,7 @@ public class Voxspell extends JPanel {
 		overallPanel.add(spellingQuiz, NEW_QUIZ);
 
 		this.add(overallPanel);
+		// A CHANGE
 	}
 	
 	private void createMainMenuPanel() {
