@@ -6,7 +6,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileReader {
-
+	/*
+	 * Used for testing
+	 * 
+	 * public static void main(String[] args){ FileReader fr = new FileReader();
+	 * ArrayList<String> words = fr.getWordList(1); System.out.println("hello");
+	 * }
+	 */
 	public ArrayList<String> getWordList(int level) {
 		ArrayList<String> wordList = readInWords(level);
 
