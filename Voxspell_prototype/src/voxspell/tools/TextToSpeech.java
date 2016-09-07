@@ -82,7 +82,7 @@ public class TextToSpeech {
 		private String _sentence;
 
 		// hidden scm file to run festival - needed to change voice
-		private static final String tempScmFile = ".ttsScript.scm";
+		private static final String hiddenScmFile = ".ttsScript.scm";
 		
 		public FestivalWorker(String sentence){
 			_sentence = sentence;
@@ -91,16 +91,16 @@ public class TextToSpeech {
 		@Override
 		protected Void doInBackground() throws Exception {	
 			
-			String appendVoiceToScmFile = "echo \"" + voice + "\" >> " + tempScmFile;
+			String appendVoiceToScmFile = "echo \"" + voice + "\" >> " + hiddenScmFile;
 			runBashCommand(appendVoiceToScmFile);
 			
-			String sayText = "echo \"(SayText \\\"" + _sentence + "\\\")\" >> " + tempScmFile;
+			String sayText = "echo \"(SayText \\\"" + _sentence + "\\\")\" >> " + hiddenScmFile;
 			runBashCommand(sayText);
 			
-			String runScmFile = "festival -b " + tempScmFile;
+			String runScmFile = "festival -b " + hiddenScmFile;
 			runBashCommand(runScmFile);
 			
-			String deleteScmFile = "rm -f " + tempScmFile;
+			String deleteScmFile = "rm -f " + hiddenScmFile;
 			runBashCommand(deleteScmFile);
 			
 			return null;
