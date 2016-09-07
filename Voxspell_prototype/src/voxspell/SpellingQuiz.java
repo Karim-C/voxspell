@@ -2,8 +2,6 @@ package voxspell;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -31,6 +29,10 @@ public class SpellingQuiz extends JPanel {
 	private ArrayList<String> wordList;
 	private boolean firstAttempt = true;
 	
+	// tools
+	private FileReader fileReader = new FileReader();
+	private TextToSpeech textToSpeech = TextToSpeech.getInstance();
+	
 	/**
 	 * Build GUI and configure
 	 */
@@ -50,7 +52,7 @@ public class SpellingQuiz extends JPanel {
 
 	protected final void createGUI() {
 		
-		this.setPreferredSize(new Dimension(305,270)); // ? 
+		this.setPreferredSize(new Dimension(305,270)); // ? sized for assignment 2, make bigger?
 
 		// Area displayed by the program to the user
 		_programOutputArea = new JTextArea();
@@ -66,20 +68,16 @@ public class SpellingQuiz extends JPanel {
 		// Btn pressed by user after entering word
 		_enterWordBtn = new JButton("Enter");
 		this.add(_enterWordBtn, BorderLayout.WEST);
-
 		
 		createEventHandlers();	
 	}
 	
 	private void createEventHandlers() {
-		
 		_enterWordBtn.addActionListener( (ActionListener) ->{
 			// user presss this after entering a word.
 			// process word -- compare to actual spelling etc
 			checkInputWord();
-			
 		});
-		
 	}
 	
 	/**
@@ -87,7 +85,12 @@ public class SpellingQuiz extends JPanel {
 	 * Ask user for level, ask for first word in quiz.
 	 */
 	public void newQuiz()  {
-		// popup asking for level
+		this.setBorder(BorderFactory.createTitledBorder("Level ?"));
+		promptUserForInitialLevel();
+		resetFieldsReadWordsFromFileAndBeginQuiz();
+	}
+
+	private void promptUserForInitialLevel() {
 		String whatLevel = (String) JOptionPane.showInputDialog(this, 
 				"What level to start at?",
 				"What level?",
@@ -95,47 +98,57 @@ public class SpellingQuiz extends JPanel {
 				null,
 				levels,
 				levels[0]);
-		
-		// 
+
 		level = Integer.parseInt(whatLevel);
-		this.setBorder(BorderFactory.createTitledBorder("Level " + level));
-		_programOutputArea.setText(""); //clears the screen
-		
-		FileReader fr = new FileReader();
-		// reads words from file based on level
-		wordList = fr.getWordList(level);
-		continueSpellingQuiz();
 	}
 	
+	private void resetFieldsReadWordsFromFileAndBeginQuiz() {
+		firstAttempt = true; 
+		_programOutputArea.setText(""); // any others?
+		this.setBorder(BorderFactory.createTitledBorder("Level " + level));
+		
+		readWordsFromFile();
+		continueSpellingQuiz();
+	}
+		
+	private void readWordsFromFile() {
+		wordList = fileReader.getWordList(level);
+	}
+
 	/**
 	 * Continue quiz:
 	 * Next word in quiz (until 10 have been asked).
 	 */
 	public void continueSpellingQuiz() {
-		TextToSpeech tts = TextToSpeech.getInstance();
 		
 		//when the wordList is empty the quiz is finished
 		if (wordList.size() > 0){
 
 			if (firstAttempt){
-				String line = "Please spell... " + wordList.get(0);
+				String line = "Please spell ... " + wordList.get(0);
 				_programOutputArea.append("Spell word " + (11 - wordList.size()) + " of 10: ");
-				tts.readSentence(line);
+				textToSpeech.readSentence(line);
 			}else {
-				String line = "try once more. " + wordList.get(0) + "... " + wordList.get(0);
+				String line = "try once more. " + wordList.get(0) + " ... " + wordList.get(0);
 				_programOutputArea.append("Incorrect, try once more: ");
-				tts.readSentence(line);
+				textToSpeech.readSentence(line);
 				firstAttempt = false; // resets so the next attempts can be tracked
 			}
+		} else {
+			/*
+			 * Quiz has finished, determine if user passed the current level and prompt if they want to
+			 * restart current level or continue to next (play video?)
+			 */
+			level++; // not if level = 10
+			resetFieldsReadWordsFromFileAndBeginQuiz();
 		}
 	}
 	
-	public void checkInputWord() {
+	private void checkInputWord() {
 		if (wordList.size() > 0){
-			TextToSpeech tts = TextToSpeech.getInstance();
 			
 			if (_wordEntryField.getText().equals(wordList.get(0))){
-				tts.readSentenceAndContinueSpellingQuiz("Correct", this);
+				textToSpeech.readSentenceAndContinueSpellingQuiz("Correct", this);
 				_programOutputArea.append(_wordEntryField.getText() + "\n");
 				wordList.remove(0);// the word is removed from the list when it is correctly spelled
 				
@@ -144,7 +157,7 @@ public class SpellingQuiz extends JPanel {
 				}
 				
 			}else {
-				tts.readSentenceAndContinueSpellingQuiz("Incorrect", this);
+				textToSpeech.readSentenceAndContinueSpellingQuiz("Incorrect", this);
 				_programOutputArea.append(_wordEntryField.getText() + "\n");
 				if (firstAttempt){
 					firstAttempt = false; // the next attempt will no longer be the first
@@ -156,4 +169,5 @@ public class SpellingQuiz extends JPanel {
 			_wordEntryField.setText(""); // clears the entry field
 		}
 	}
+	
 }
