@@ -44,7 +44,7 @@ public class Voxspell extends JPanel {
 	private JButton _clearStatsBtn = new JButton(CLEAR_STATS);
 
 	// Voice combobox
-	private static final String[] _ttsVoices = { "Rab" , "Kal" }; // enum?
+	private static final String[] _ttsVoices = { "Kal" , "Rab" }; // enum?
 
 	private JComboBox<String> _ttsVoiceComboBox;
 

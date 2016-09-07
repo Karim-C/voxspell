@@ -26,7 +26,7 @@ public class TextToSpeech {
 	}
 	
 	// voice
-	private static String voice;
+	private static String voice; // default "(voice_kal_diphone)"
 	
 	/**
 	 * Sets the voice to be used in TextToSpeech.
