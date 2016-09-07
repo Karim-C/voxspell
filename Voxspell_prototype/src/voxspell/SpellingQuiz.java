@@ -12,31 +12,39 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class SpellingQuiz extends JPanel {
 
 	// Swing components
 	private JTextField _wordEntryField;
 	private JButton _enterWordBtn;
-	private JButton _newQuizBtn;
 	protected JTextArea _programOutputArea;
 	
 	// game logic
+	private static final int NUM_OF_LEVELS = 10;
 	private int level;
-	
-	private static final String[] levels = {"1","2","3","4","5","6","7","8","9","10"}; //k better way?
+	private static String[] levels;
 	
 	/**
-	 * Gets the file name from the sub type, then creates the GUI.
+	 * Build GUI and configure
 	 */
 	public SpellingQuiz(){
+		initLevels();
 		createGUI();
 	}
 	
+	private void initLevels() {
+		if (levels == null){
+			levels = new String[NUM_OF_LEVELS];
+			for (int i = 1; i <= NUM_OF_LEVELS; i++){
+				levels[i-1] = i+"";
+			}
+		}
+	}
+
 	protected final void createGUI() {
 		
-		
-	//	this.setBorder(BorderFactory.createTitledBorder("Level x"));
-		this.setPreferredSize(new Dimension(305,270));
+		this.setPreferredSize(new Dimension(305,270)); // ? 
 
 		// Area displayed by the program to the user
 		_programOutputArea = new JTextArea();
@@ -53,13 +61,23 @@ public class SpellingQuiz extends JPanel {
 		_enterWordBtn = new JButton("Enter");
 		this.add(_enterWordBtn, BorderLayout.WEST);
 
-		// New quiz button, only available after a quiz has completed
-		_newQuizBtn = new JButton("New Quiz");
-		this.add(_newQuizBtn, BorderLayout.EAST);
 		
-		addEventHandlers();	
+		createEventHandlers();	
 	}
 	
+	private void createEventHandlers() {
+		
+		_enterWordBtn.addActionListener( (ActionListener) ->{
+			// user presss this after entering a word.
+			// process word -- compare to actual spelling etc
+		});
+		
+	}
+	
+	/**
+	 * New quiz:
+	 * Ask user for level, ask for first word in quiz.
+	 */
 	public void newQuiz()  {
 		// popup asking for level
 		String whatLevel = (String) JOptionPane.showInputDialog(this, 
@@ -73,20 +91,16 @@ public class SpellingQuiz extends JPanel {
 		// 
 		level = Integer.parseInt(whatLevel);
 		this.setBorder(BorderFactory.createTitledBorder("Level " + level));
-		// read file for level
+		
+		// read words from file based on level
 	}
 	
-	private void addEventHandlers() {
-		/* 
-		 *remove this button, user gets option to proceed after completing quiz.
-		 */
-		_newQuizBtn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				newQuiz();
-			}
-		});
+	/**
+	 * Continue quiz:
+	 * Next word in quiz (until 10 have been asked).
+	 */
+	public void continueSpellingQuiz() {
+		// TODO Auto-generated method stub
 		
 	}
 
