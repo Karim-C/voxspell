@@ -3,8 +3,6 @@ package voxspell;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -116,7 +114,6 @@ public class Voxspell extends JPanel {
 			String voice = (String) _ttsVoiceComboBox.getSelectedItem();
 			String voiceCommand = getFestivalVoiceCommand(voice);
 			TextToSpeech.setVoice(voiceCommand);
-			this.validate();
 		});
 
 	}

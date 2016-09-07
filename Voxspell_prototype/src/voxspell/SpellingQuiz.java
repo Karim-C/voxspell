@@ -2,8 +2,6 @@ package voxspell;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -84,6 +82,9 @@ public class SpellingQuiz extends JPanel {
 	 * Ask user for level, ask for first word in quiz.
 	 */
 	public void newQuiz()  {
+		// clear and reset everything
+		_programOutputArea.setText("");
+		
 		// popup asking for level
 		String whatLevel = (String) JOptionPane.showInputDialog(this, 
 				"What level to start at?",
@@ -100,7 +101,7 @@ public class SpellingQuiz extends JPanel {
 		// read words from file based on level
 		
 		// prompt to spell first word
-		_programOutputArea.append("Please spell: ..  word 1 of 10");
+		_programOutputArea.append("Please spell: ..  word 1 of 10\n");
 		textToSpeech.readSentence("Please spell : .. ");
 	}
 	

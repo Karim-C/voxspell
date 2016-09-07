@@ -14,7 +14,7 @@ import voxspell.SpellingQuiz;
  */
 public class TextToSpeech {
 
-	private FestivalWorker _processWorker;
+	private FestivalWorker festivalWorker;
 	private boolean _continueSpellingQuiz = false;
 	private SpellingQuiz _spellingQuiz;
 	
@@ -30,8 +30,8 @@ public class TextToSpeech {
 	
 	/**
 	 * Sets the voice to be used in TextToSpeech.
-	 * Must be in the form "voice_"
-	 * E.g. "voice_kal_diphone" or "voice_rab_diphone"
+	 * Must be in the form "(voice_)"
+	 * E.g. "(voice_kal_diphone)" or "(voice_rab_diphone)"
 	 */
 	public static void setVoice(String newVoice){
 		voice = newVoice;
@@ -52,8 +52,8 @@ public class TextToSpeech {
 	 */
 	public void readSentence(String sentence){
 		// Use the festival worker class to read the sentence on a background thread
-		_processWorker = new FestivalWorker(sentence);
-		_processWorker.execute();
+		festivalWorker = new FestivalWorker(sentence);
+		festivalWorker.execute();
 	}
 	
 	/**
