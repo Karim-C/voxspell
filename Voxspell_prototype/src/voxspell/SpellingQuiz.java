@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import voxspell.tools.TextToSpeech;
+
 @SuppressWarnings("serial")
 public class SpellingQuiz extends JPanel {
 
@@ -22,8 +24,11 @@ public class SpellingQuiz extends JPanel {
 	
 	// game logic
 	private static final int NUM_OF_LEVELS = 10;
-	private int level;
+	private int level = 1;
 	private static String[] levels;
+	
+	// TextToSpeech
+	private TextToSpeech textToSpeech = TextToSpeech.getInstance();
 	
 	/**
 	 * Build GUI and configure
@@ -93,6 +98,10 @@ public class SpellingQuiz extends JPanel {
 		this.setBorder(BorderFactory.createTitledBorder("Level " + level));
 		
 		// read words from file based on level
+		
+		// prompt to spell first word
+		_programOutputArea.append("Please spell: ..  word 1 of 10");
+		textToSpeech.readSentence("Please spell : .. ");
 	}
 	
 	/**

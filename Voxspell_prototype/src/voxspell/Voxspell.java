@@ -10,10 +10,13 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import voxspell.tools.TextToSpeech;
 
 /**
  * Voxspell main.
@@ -24,15 +27,16 @@ import javax.swing.SwingUtilities;
 @SuppressWarnings("serial")
 public class Voxspell extends JPanel {
 
+	// Cardlayout used to switch between JPanels in the overallPanel 
+	private CardLayout cardLayout = new CardLayout();
+
 	// Main menu panel and the overall (Spelling Aid) panel
 	private JPanel mainMenuPanel, overallPanel;
-
 	private SpellingQuiz spellingQuiz;
 
 	// Names for main menu buttons
 	private static final String MAIN_MENU = "Return to main menu";
 	private static final String NEW_QUIZ = "New Spelling Quiz";
-	private static final String REVIEW_MISTAKES = "Review Mistakes";
 	private static final String VIEW_STATS = "View Statistics";
 	private static final String CLEAR_STATS = "Clear Statistics";
 
@@ -41,8 +45,10 @@ public class Voxspell extends JPanel {
 	private JButton _viewStatsBtn = new JButton(VIEW_STATS);
 	private JButton _clearStatsBtn = new JButton(CLEAR_STATS);
 
-	// Cardlayout used to switch between JPanels in the overallPanel 
-	private CardLayout cardLayout = new CardLayout();
+	// Voice combobox
+	private static final String[] _ttsVoices = { "Rab" , "Kal" }; // enum?
+
+	private JComboBox<String> _ttsVoiceComboBox;
 
 	public Voxspell() {  
 
@@ -57,7 +63,12 @@ public class Voxspell extends JPanel {
 		overallPanel.add(spellingQuiz, NEW_QUIZ);
 
 		this.add(overallPanel);
-		// A CHANGE
+
+		// Voice dropdown, stats (soon)
+		_ttsVoiceComboBox = new JComboBox<String>(_ttsVoices);
+		this.add(_ttsVoiceComboBox, BorderLayout.SOUTH);
+
+		createVoiceEventHandler();
 	}
 
 	private void createMainMenuPanel() {
@@ -98,6 +109,28 @@ public class Voxspell extends JPanel {
 				//		clearStats(); // seperate ones for clearing session stats vs. entire history?
 			}
 		});
+	}
+
+	private void createVoiceEventHandler() {
+		_ttsVoiceComboBox.addActionListener( (ActionListener) -> {
+			String voice = (String) _ttsVoiceComboBox.getSelectedItem();
+			String voiceCommand = getFestivalVoiceCommand(voice);
+			TextToSpeech.setVoice(voiceCommand);
+			this.validate();
+		});
+
+	}
+
+	private String getFestivalVoiceCommand(String voice) {
+		switch (voice){
+		case "Rab":
+			return "(voice_rab_diphone)";
+		case "Kal":
+			return "(voice_kal_diphone)";
+		default:
+			return "(voice_kal_diphone)";
+		} 
+
 	}
 
 	private static void createAndShowGUI() {

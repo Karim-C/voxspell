@@ -1,5 +1,7 @@
 package voxspell.tools;
 
+import java.io.IOException;
+
 import javax.swing.SwingWorker;
 
 import voxspell.SpellingQuiz;
@@ -12,7 +14,7 @@ import voxspell.SpellingQuiz;
  */
 public class TextToSpeech {
 
-	private ProcessWorker _processWorker;
+	private FestivalWorker _processWorker;
 	private boolean _continueSpellingQuiz = false;
 	private SpellingQuiz _spellingQuiz;
 	
@@ -21,6 +23,18 @@ public class TextToSpeech {
 	private TextToSpeech() {}
 	public static TextToSpeech getInstance(){
 		return instance;
+	}
+	
+	// voice
+	private static String voice;
+	
+	/**
+	 * Sets the voice to be used in TextToSpeech.
+	 * Must be in the form "voice_"
+	 * E.g. "voice_kal_diphone" or "voice_rab_diphone"
+	 */
+	public static void setVoice(String newVoice){
+		voice = newVoice;
 	}
 
 	/**
@@ -37,10 +51,8 @@ public class TextToSpeech {
 	 * Reads out a sentence using text to speech.
 	 */
 	public void readSentence(String sentence){
-		String command = "echo " + sentence + " | festival --tts";
-		
-		// Use the process worker class to process the command on a background thread.
-		_processWorker = new ProcessWorker(command);
+		// Use the festival worker class to read the sentence on a background thread
+		_processWorker = new FestivalWorker(sentence);
 		_processWorker.execute();
 	}
 	
@@ -62,24 +74,42 @@ public class TextToSpeech {
 	 * 
 	 * @author Will Molloy
 	 */
-	private class ProcessWorker extends SwingWorker<Void, Void>{
+	private class FestivalWorker extends SwingWorker<Void, Void>{
 		
 		private ProcessBuilder _processBuilder;
 		private Process _process;
 		
-		private String _command;
+		private String _sentence;
 
+		// hidden scm file to run festival - needed to change voice
+		private static final String tempScmFile = ".ttsScript.scm";
 		
-		public ProcessWorker(String command){
-			_command = command;
+		public FestivalWorker(String sentence){
+			_sentence = sentence;
 		}
 		
 		@Override
-		protected Void doInBackground() throws Exception {
-			_processBuilder = new ProcessBuilder("bash" , "-c" , _command);
+		protected Void doInBackground() throws Exception {	
+			
+			String appendVoiceToScmFile = "echo \"" + voice + "\" >> " + tempScmFile;
+			runBashCommand(appendVoiceToScmFile);
+			
+			String sayText = "echo \"(SayText \\\"" + _sentence + "\\\")\" >> " + tempScmFile;
+			runBashCommand(sayText);
+			
+			String runScmFile = "festival -b " + tempScmFile;
+			runBashCommand(runScmFile);
+			
+			String deleteScmFile = "rm -f " + tempScmFile;
+			runBashCommand(deleteScmFile);
+			
+			return null;
+		}
+		
+		private void runBashCommand(String command) throws IOException, InterruptedException{
+			_processBuilder = new ProcessBuilder("bash" , "-c" , command);
 			_process = _processBuilder.start();
 			_process.waitFor();
-			return null;
 		}
 		
 		/**
