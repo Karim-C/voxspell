@@ -31,6 +31,9 @@ public class Voxspell extends JPanel {
 	// Main menu panel and the overall (Spelling Aid) panel
 	private JPanel mainMenuPanel, overallPanel;
 	private SpellingQuiz spellingQuiz;
+	
+	//Statistics
+	private Statistics _statistics;
 
 	// Names for main menu buttons
 	private static final String MAIN_MENU = "Return to main menu";
@@ -47,6 +50,8 @@ public class Voxspell extends JPanel {
 	private static final String[] _ttsVoices = { "Kal" , "Rab" }; // enum?
 
 	private JComboBox<String> _ttsVoiceComboBox;
+
+	
 
 	public Voxspell() {  
 
@@ -65,6 +70,10 @@ public class Voxspell extends JPanel {
 		// Voice dropdown, stats (soon)
 		_ttsVoiceComboBox = new JComboBox<String>(_ttsVoices);
 		this.add(_ttsVoiceComboBox, BorderLayout.SOUTH);
+		
+		_statistics = Statistics.getInstance();
+		this.add(_statistics, BorderLayout.NORTH);
+		
 
 		createVoiceEventHandler();
 	}
@@ -97,6 +106,7 @@ public class Voxspell extends JPanel {
 
 		_viewStatsBtn.addActionListener( (ActionListener) -> {
 			cardLayout.show(overallPanel, VIEW_STATS);
+			
 			//		viewStatsPanel.generateAndShowStats(); // will show entire history of stats 
 			// session stats will always be showing
 		});

@@ -52,12 +52,12 @@ public class SpellingQuiz extends JPanel {
 
 	protected final void createGUI() {
 		
-		this.setPreferredSize(new Dimension(305,270)); // ? sized for assignment 2, make bigger?
+		this.setPreferredSize(new Dimension(305,450)); // ? sized for assignment 2, make bigger?
 
 		// Area displayed by the program to the user
 		_programOutputArea = new JTextArea();
 		_programOutputArea.setEditable(false);
-		_programOutputArea.setPreferredSize(new Dimension(285,180));
+		_programOutputArea.setPreferredSize(new Dimension(285, 340));
 		this.add(_programOutputArea, BorderLayout.NORTH);
 		
 		// Where user enters the word
@@ -146,28 +146,33 @@ public class SpellingQuiz extends JPanel {
 	
 	private void checkInputWord() {
 		if (wordList.size() > 0){
-			
+			Statistics stats = Statistics.getInstance();
 			if (_wordEntryField.getText().equals(wordList.get(0))){
 				textToSpeech.readSentenceAndContinueSpellingQuiz("Correct", this);
 				_programOutputArea.append(_wordEntryField.getText() + "\n");
+				stats.addToStats(wordList.get(0), true); // the word is recorded in the statistics
 				wordList.remove(0);// the word is removed from the list when it is correctly spelled
-				
 				if (!firstAttempt){
 					firstAttempt = true;
+					
 				}
+				stats.generateAndShowTable();
 				
 			}else {
+				stats.addToStats(wordList.get(0), false);
 				textToSpeech.readSentenceAndContinueSpellingQuiz("Incorrect", this);
 				_programOutputArea.append(_wordEntryField.getText() + "\n");
 				if (firstAttempt){
 					firstAttempt = false; // the next attempt will no longer be the first
 				}else {
 					wordList.remove(0); // the word is removed from the list after it is seen twice
-					firstAttempt = true; // resets so the next attempts can be tracked
+					firstAttempt = true;
+					stats.generateAndShowTable();// resets so the next attempts can be tracked
 				}
 			}
 			_wordEntryField.setText(""); // clears the entry field
 		}
+		
 	}
 	
 }
