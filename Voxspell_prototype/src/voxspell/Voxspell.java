@@ -114,8 +114,10 @@ public class Voxspell extends JPanel {
 		_clearStatsBtn.addActionListener( (ActionListener) -> {
 			if (!areYouSure("Clear statistics")){
 				return;
+				
 				//		clearStats(); // seperate ones for clearing session stats vs. entire history?
 			}
+			_statistics.clearStats();
 		});
 	}
 

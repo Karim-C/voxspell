@@ -80,6 +80,15 @@ public class Statistics extends JPanel {
 			currentStats.add(index, new String[] { word, successes, Attempts });
 		}
 	}
+	
+	/**
+	 * This method clears the current statistics
+	 * 
+	 */
+	public void clearStats() {
+		currentStats = new ArrayList<String[]>();
+		generateAndShowTable();
+	}
 
 	/**
 	 * Adds empty scroll pane to this JPanel which will later hold the statistic
