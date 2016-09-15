@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import voxspell.tools.CustomOptionPane;
 import voxspell.tools.TextToSpeech;
 
 /**
@@ -24,12 +25,14 @@ import voxspell.tools.TextToSpeech;
  */
 @SuppressWarnings("serial")
 public class Voxspell extends JPanel {
-
+		
 	// Cardlayout used to switch between JPanels in the overallPanel 
-	private CardLayout cardLayout = new CardLayout();
+	private static CardLayout cardLayout = new CardLayout();
 
 	// Main menu panel and the overall (Spelling Aid) panel
-	private JPanel mainMenuPanel, overallPanel;
+	private JPanel mainMenuPanel;
+
+	private static JPanel overallPanel;
 	private SpellingQuiz spellingQuiz;
 	
 	//Statistics
@@ -51,9 +54,7 @@ public class Voxspell extends JPanel {
 
 	private JComboBox<String> _ttsVoiceComboBox;
 
-	
-
-	public Voxspell() {  
+	private Voxspell() {  
 
 		/* Create base panels for the program */
 		createMainMenuPanel();
@@ -94,8 +95,7 @@ public class Voxspell extends JPanel {
 
 	private void createNewQuizPanel() {
 		spellingQuiz = new SpellingQuiz();
-		spellingQuiz.add(new ReturnToMainMenuButton(), BorderLayout.SOUTH);
-
+		spellingQuiz.add(new ReturnToMainMenuBtn(), BorderLayout.SOUTH);
 	}
 
 	private void createMainMenuEventHandlers() {
@@ -106,16 +106,11 @@ public class Voxspell extends JPanel {
 
 		_viewStatsBtn.addActionListener( (ActionListener) -> {
 			cardLayout.show(overallPanel, VIEW_STATS);
-			
-			//		viewStatsPanel.generateAndShowStats(); // will show entire history of stats 
-			// session stats will always be showing
 		});
 
 		_clearStatsBtn.addActionListener( (ActionListener) -> {
 			if (!areYouSure("Clear statistics")){
 				return;
-				
-				//		clearStats(); // seperate ones for clearing session stats vs. entire history?
 			}
 			_statistics.clearStats();
 		});
@@ -169,35 +164,39 @@ public class Voxspell extends JPanel {
 		});
 	}
 
+	public static void showMainMenu(){
+		cardLayout.show(overallPanel, MAIN_MENU);
+	}
+	
 	/**
 	 * Prompts the user with a YES_NO JOptionPane if they want to proceed with a menu selection or not.
 	 * 
 	 * Got the code here: http://stackoverflow.com/a/15853127/6122976
 	 */
 	private boolean areYouSure(String selection) {
-		if(JOptionPane.showConfirmDialog(this, selection + ", are you sure?", "Proceed?", 
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE ) == JOptionPane.YES_OPTION){
+		CustomOptionPane customOptionPane = new CustomOptionPane(this);
+		if (customOptionPane.yesNoDialog(selection + ", are you sure?", "Proceed?")){
 			return true;
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Represents a JButton allowing the user to return to the main menu.
-	 * Nested because it needs access to private fields.
+	 * 
+	 * @author will
 	 */
-	private class ReturnToMainMenuButton extends JButton{
-
-		public ReturnToMainMenuButton(){
+	private class ReturnToMainMenuBtn extends JButton{
+		
+		public ReturnToMainMenuBtn(){
 			super("Return to Main Menu"); // name of button
-
+			
 			this.addActionListener( (ActionListener) -> {
 				if (!areYouSure("Return to the main menu")){ // dialog popup
 					return;
 				}
-				cardLayout.show(overallPanel, MAIN_MENU);
-
+				showMainMenu();
 			});
 		}
-	}
+	}	
 }

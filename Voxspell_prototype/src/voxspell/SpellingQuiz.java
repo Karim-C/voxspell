@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import voxspell.tools.CustomOptionPane;
 import voxspell.tools.FileReader;
 import voxspell.tools.TextToSpeech;
 
@@ -28,10 +29,12 @@ public class SpellingQuiz extends JPanel {
 	private static String[] levels;
 	private ArrayList<String> wordList;
 	private boolean firstAttempt = true;
+	private int _wordsCorrectInQuiz;
 	
 	// tools
 	private FileReader fileReader = new FileReader();
 	private TextToSpeech textToSpeech = TextToSpeech.getInstance();
+	private CustomOptionPane customOptionPane = new CustomOptionPane(this);
 	
 	/**
 	 * Build GUI and configure
@@ -103,6 +106,7 @@ public class SpellingQuiz extends JPanel {
 	}
 	
 	private void resetFieldsReadWordsFromFileAndBeginQuiz() {
+		_wordsCorrectInQuiz = 0;
 		firstAttempt = true; 
 		_programOutputArea.setText(""); // any others?
 		this.setBorder(BorderFactory.createTitledBorder("Level " + level));
@@ -135,36 +139,81 @@ public class SpellingQuiz extends JPanel {
 				firstAttempt = false; // resets so the next attempts can be tracked
 			}
 		} else {
-			/*
-			 * Quiz has finished, determine if user passed the current level and prompt if they want to
-			 * restart current level or continue to next (play video?)
-			 */
-			level++; // not if level = 10
-			resetFieldsReadWordsFromFileAndBeginQuiz();
+			/* Quiz has completed */
+			
+			if (_wordsCorrectInQuiz < 9){
+				// Failed - option to restart current level or go back to main menu
+				String[] options = { "Restart current level" , "Return to main menu" };
+				
+				int selection = customOptionPane.optionDialog("You got " + _wordsCorrectInQuiz + " words correct out of 10.\n"
+						+ "You need 9 or more words correct in order to progress to the next level.\n"
+						, "Failure", options, options[0]);
+				switch(selection){
+				case 0:
+					resetFieldsReadWordsFromFileAndBeginQuiz(); // restart level
+					break;
+				case 1:
+					Voxspell.showMainMenu(); // go back to main menu
+					break;
+				}
+			} else {
+				// Passed - option to play video AND start next level, go to next level (no video), or restart current level
+				String[] options = { "Play video then go to next level" , "Go to next level" , "Restart current level" , "Return to main menu" };
+
+				int selection = customOptionPane.optionDialog("You got " + _wordsCorrectInQuiz + " words correct out of 10.\n"
+						+ "You have passed!.\n"
+						+ "You have unlocked the reward video and can proceed to the next level."
+						, "Passed!", options, options[0]);
+				switch(selection){
+				case 0:
+					playVideo();
+					nextLevel();
+					break;
+				case 1:
+					nextLevel();
+					break;
+				case 2:
+					resetFieldsReadWordsFromFileAndBeginQuiz(); // restart level
+					break;
+				case 3:
+					Voxspell.showMainMenu(); // go back to main menu
+					break;
+				}
+			}
 		}
 	}
 	
+	private void nextLevel(){
+		level++;
+		resetFieldsReadWordsFromFileAndBeginQuiz(); 
+	}
+	
+	private void playVideo() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void checkInputWord() {
 		if (wordList.size() > 0){
 			Statistics stats = Statistics.getInstance();
 			if (_wordEntryField.getText().equals(wordList.get(0))){
 				textToSpeech.readSentenceAndContinueSpellingQuiz("Correct", this);
 				_programOutputArea.append(_wordEntryField.getText() + "\n");
+				_wordsCorrectInQuiz++;
 				stats.addToStats(wordList.get(0), true); // the word is recorded in the statistics
 				wordList.remove(0);// the word is removed from the list when it is correctly spelled
 				if (!firstAttempt){
 					firstAttempt = true;
-					
 				}
 				stats.generateAndShowTable();
 				
-			}else {
+			} else {
 				stats.addToStats(wordList.get(0), false);
 				textToSpeech.readSentenceAndContinueSpellingQuiz("Incorrect", this);
 				_programOutputArea.append(_wordEntryField.getText() + "\n");
 				if (firstAttempt){
 					firstAttempt = false; // the next attempt will no longer be the first
-				}else {
+				} else {
 					wordList.remove(0); // the word is removed from the list after it is seen twice
 					firstAttempt = true;
 					stats.generateAndShowTable();// resets so the next attempts can be tracked
