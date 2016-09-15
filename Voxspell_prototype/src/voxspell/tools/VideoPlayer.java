@@ -19,6 +19,16 @@ import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 import voxspell.SpellingQuiz;
 
+/**
+ * Plays a video in a JFrame.
+ * 
+ * Linked to the voxspell.SpellingQuiz class.
+ * 
+ * Has a method to play the reward level and progress to the next level.
+ * And a method to play the final reward video after finishing the final level in the SpellingQuiz class. (todo)
+ * 
+ * @author will
+ */
 public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	
 	private static final String videoFileName = "big_buck_bunny_1_minute.avi";
@@ -78,7 +88,7 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	
 	@Override
 	public void finished(MediaPlayer mediaPlayer){
-		videoFrame.dispose();
+		videoFrame.dispose(); // closes only the JFrame with the video, not entire voxspell program
 		_spellingQuiz.nextLevel();
 		super.finished(mediaPlayer);
 	}

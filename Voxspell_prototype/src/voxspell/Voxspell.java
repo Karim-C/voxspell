@@ -95,7 +95,6 @@ public class Voxspell extends JPanel {
 
 	private void createNewQuizPanel() {
 		spellingQuiz = new SpellingQuiz();
-		spellingQuiz.add(new ReturnToMainMenuBtn(), BorderLayout.SOUTH);
 	}
 
 	private void createMainMenuEventHandlers() {
@@ -180,23 +179,4 @@ public class Voxspell extends JPanel {
 		}
 		return false;
 	}
-	
-	/**
-	 * Represents a JButton allowing the user to return to the main menu.
-	 * 
-	 * @author will
-	 */
-	private class ReturnToMainMenuBtn extends JButton{
-		
-		public ReturnToMainMenuBtn(){
-			super("Return to Main Menu"); // name of button
-			
-			this.addActionListener( (ActionListener) -> {
-				if (!areYouSure("Return to the main menu")){ // dialog popup
-					return;
-				}
-				showMainMenu();
-			});
-		}
-	}	
 }

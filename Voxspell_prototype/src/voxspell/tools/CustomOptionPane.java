@@ -4,7 +4,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
- * Represents a easier way to create JOptionPanes with a few options. 
+ * Represents an easier way to create JOptionPanes with a few options. 
  * @author will
  *
  */

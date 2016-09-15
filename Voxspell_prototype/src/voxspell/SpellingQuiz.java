@@ -22,7 +22,8 @@ public class SpellingQuiz extends JPanel {
 	// Swing components
 	private JTextField _wordEntryField;
 	private JButton _enterWordBtn;
-	protected JTextArea _programOutputArea;
+	private JTextArea _programOutputArea;
+	private ReturnToMainMenuBtn _returnToMainMenuBtn;
 
 	// game logic
 	private static final int NUM_OF_LEVELS = 10;
@@ -30,7 +31,7 @@ public class SpellingQuiz extends JPanel {
 	private static String[] levels;
 	private ArrayList<String> wordList;
 	private boolean firstAttempt = true;
-	private int _wordsCorrectInQuiz;
+	private int _wordsCorrectFirstAttempt;
 
 	// tools
 	private FileReader fileReader = new FileReader();
@@ -72,6 +73,9 @@ public class SpellingQuiz extends JPanel {
 		// Btn pressed by user after entering word
 		_enterWordBtn = new JButton("Enter");
 		this.add(_enterWordBtn, BorderLayout.WEST);
+		
+		_returnToMainMenuBtn =  new ReturnToMainMenuBtn(this);
+		this.add(_returnToMainMenuBtn, BorderLayout.SOUTH);
 
 		createEventHandlers();	
 	}
@@ -107,7 +111,7 @@ public class SpellingQuiz extends JPanel {
 	}
 
 	private void resetFieldsReadWordsFromFileAndBeginQuiz() {
-		_wordsCorrectInQuiz = 0;
+		_wordsCorrectFirstAttempt = 0;
 		firstAttempt = true; 
 		_programOutputArea.setText(""); // any others?
 		this.setBorder(BorderFactory.createTitledBorder("Level " + level));
@@ -127,7 +131,7 @@ public class SpellingQuiz extends JPanel {
 	public void continueSpellingQuiz() {
 
 		//when the wordList is empty the quiz is finished
-		if (wordList.size() > 9){
+		if (wordList.size() > 0){
 
 			if (firstAttempt){
 				String line = "Please spell ... " + wordList.get(0);
@@ -142,11 +146,11 @@ public class SpellingQuiz extends JPanel {
 		} else {
 			/* Quiz has completed */
 
-			if (!(_wordsCorrectInQuiz < 9)){
+			if (_wordsCorrectFirstAttempt < 9){
 				// Failed - option to restart current level or go back to main menu
 				String[] options = { "Restart current level" , "Return to main menu" };
 
-				int selection = customOptionPane.optionDialog("You got " + _wordsCorrectInQuiz + " words correct out of 10.\n"
+				int selection = customOptionPane.optionDialog("You got " + _wordsCorrectFirstAttempt + " words correct out of 10.\n"
 						+ "You need 9 or more words correct in order to progress to the next level.\n"
 						, "Failure", options, options[0]);
 				switch(selection){
@@ -160,13 +164,15 @@ public class SpellingQuiz extends JPanel {
 			} else {
 				if (level == 10){
 					// DIFFERENT reward video is played and dialog if passed final level
+					
+					// USE FFMPEG to make a different video?
 				} else {
 
 					// Passed - option to play video AND start next level, go to next level (no video), or restart current level
 					String[] options = { "Play video then go to next level" , "Go to next level" , "Restart current level" , "Return to main menu" };
 
-					int selection = customOptionPane.optionDialog("You got " + _wordsCorrectInQuiz + " words correct out of 10.\n"
-							+ "You have passed!.\n"
+					int selection = customOptionPane.optionDialog("You got " + _wordsCorrectFirstAttempt + " words correct out of 10.\n"
+							+ "You have passed!\n"
 							+ "You have unlocked the reward video and can proceed to the next level."
 							, "Passed!", options, options[0]);
 					switch(selection){
@@ -191,12 +197,23 @@ public class SpellingQuiz extends JPanel {
 	public void nextLevel(){
 		level++;
 		resetFieldsReadWordsFromFileAndBeginQuiz(); 
+		enableQuizBtns();
 	}
 
 	private void playVideoAndGoToNextSpellingQuizLevel() {
 		VideoPlayer videoPlayer = new VideoPlayer(this);
 		videoPlayer.playVideoThenGoToNextSpellingQuizLevel();
-		// disable enter and return to main menu btn -- 
+		disableQuizBtns();
+	}
+	
+	private void disableQuizBtns(){
+		_returnToMainMenuBtn.setEnabled(false);
+		_enterWordBtn.setEnabled(false);
+	}
+	
+	private void enableQuizBtns(){
+		_returnToMainMenuBtn.setEnabled(true);
+		_enterWordBtn.setEnabled(true);
 	}
 
 	private void checkInputWord() {
@@ -205,11 +222,13 @@ public class SpellingQuiz extends JPanel {
 			if (_wordEntryField.getText().equals(wordList.get(0))){
 				textToSpeech.readSentenceAndContinueSpellingQuiz("Correct", this);
 				_programOutputArea.append(_wordEntryField.getText() + "\n");
-				_wordsCorrectInQuiz++;
+
 				stats.addToStats(wordList.get(0), true); // the word is recorded in the statistics
 				wordList.remove(0);// the word is removed from the list when it is correctly spelled
 				if (!firstAttempt){
 					firstAttempt = true;
+				} else {
+					_wordsCorrectFirstAttempt++;
 				}
 				stats.generateAndShowTable();
 
