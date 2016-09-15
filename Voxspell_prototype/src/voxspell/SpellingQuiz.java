@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import voxspell.tools.CustomOptionPane;
 import voxspell.tools.FileReader;
 import voxspell.tools.TextToSpeech;
+import voxspell.tools.VideoPlayer;
 
 @SuppressWarnings("serial")
 public class SpellingQuiz extends JPanel {
@@ -22,7 +23,7 @@ public class SpellingQuiz extends JPanel {
 	private JTextField _wordEntryField;
 	private JButton _enterWordBtn;
 	protected JTextArea _programOutputArea;
-	
+
 	// game logic
 	private static final int NUM_OF_LEVELS = 10;
 	private int level;
@@ -30,12 +31,12 @@ public class SpellingQuiz extends JPanel {
 	private ArrayList<String> wordList;
 	private boolean firstAttempt = true;
 	private int _wordsCorrectInQuiz;
-	
+
 	// tools
 	private FileReader fileReader = new FileReader();
 	private TextToSpeech textToSpeech = TextToSpeech.getInstance();
 	private CustomOptionPane customOptionPane = new CustomOptionPane(this);
-	
+
 	/**
 	 * Build GUI and configure
 	 */
@@ -43,7 +44,7 @@ public class SpellingQuiz extends JPanel {
 		initLevels();
 		createGUI();
 	}
-	
+
 	private void initLevels() {
 		if (levels == null){
 			levels = new String[NUM_OF_LEVELS];
@@ -54,7 +55,7 @@ public class SpellingQuiz extends JPanel {
 	}
 
 	protected final void createGUI() {
-		
+
 		this.setPreferredSize(new Dimension(305,450)); // ? sized for assignment 2, make bigger?
 
 		// Area displayed by the program to the user
@@ -62,7 +63,7 @@ public class SpellingQuiz extends JPanel {
 		_programOutputArea.setEditable(false);
 		_programOutputArea.setPreferredSize(new Dimension(285, 340));
 		this.add(_programOutputArea, BorderLayout.NORTH);
-		
+
 		// Where user enters the word
 		_wordEntryField = new JTextField();
 		_wordEntryField.setPreferredSize(new Dimension(210,25));
@@ -71,10 +72,10 @@ public class SpellingQuiz extends JPanel {
 		// Btn pressed by user after entering word
 		_enterWordBtn = new JButton("Enter");
 		this.add(_enterWordBtn, BorderLayout.WEST);
-		
+
 		createEventHandlers();	
 	}
-	
+
 	private void createEventHandlers() {
 		_enterWordBtn.addActionListener( (ActionListener) ->{
 			// user presss this after entering a word.
@@ -82,7 +83,7 @@ public class SpellingQuiz extends JPanel {
 			checkInputWord();
 		});
 	}
-	
+
 	/**
 	 * New quiz:
 	 * Ask user for level, ask for first word in quiz.
@@ -104,17 +105,17 @@ public class SpellingQuiz extends JPanel {
 
 		level = Integer.parseInt(whatLevel);
 	}
-	
+
 	private void resetFieldsReadWordsFromFileAndBeginQuiz() {
 		_wordsCorrectInQuiz = 0;
 		firstAttempt = true; 
 		_programOutputArea.setText(""); // any others?
 		this.setBorder(BorderFactory.createTitledBorder("Level " + level));
-		
+
 		readWordsFromFile();
 		continueSpellingQuiz();
 	}
-		
+
 	private void readWordsFromFile() {
 		wordList = fileReader.getWordList(level);
 	}
@@ -124,9 +125,9 @@ public class SpellingQuiz extends JPanel {
 	 * Next word in quiz (until 10 have been asked).
 	 */
 	public void continueSpellingQuiz() {
-		
+
 		//when the wordList is empty the quiz is finished
-		if (wordList.size() > 0){
+		if (wordList.size() > 9){
 
 			if (firstAttempt){
 				String line = "Please spell ... " + wordList.get(0);
@@ -140,11 +141,11 @@ public class SpellingQuiz extends JPanel {
 			}
 		} else {
 			/* Quiz has completed */
-			
-			if (_wordsCorrectInQuiz < 9){
+
+			if (!(_wordsCorrectInQuiz < 9)){
 				// Failed - option to restart current level or go back to main menu
 				String[] options = { "Restart current level" , "Return to main menu" };
-				
+
 				int selection = customOptionPane.optionDialog("You got " + _wordsCorrectInQuiz + " words correct out of 10.\n"
 						+ "You need 9 or more words correct in order to progress to the next level.\n"
 						, "Failure", options, options[0]);
@@ -157,40 +158,45 @@ public class SpellingQuiz extends JPanel {
 					break;
 				}
 			} else {
-				// Passed - option to play video AND start next level, go to next level (no video), or restart current level
-				String[] options = { "Play video then go to next level" , "Go to next level" , "Restart current level" , "Return to main menu" };
+				if (level == 10){
+					// DIFFERENT reward video is played and dialog if passed final level
+				} else {
 
-				int selection = customOptionPane.optionDialog("You got " + _wordsCorrectInQuiz + " words correct out of 10.\n"
-						+ "You have passed!.\n"
-						+ "You have unlocked the reward video and can proceed to the next level."
-						, "Passed!", options, options[0]);
-				switch(selection){
-				case 0:
-					playVideo();
-					nextLevel();
-					break;
-				case 1:
-					nextLevel();
-					break;
-				case 2:
-					resetFieldsReadWordsFromFileAndBeginQuiz(); // restart level
-					break;
-				case 3:
-					Voxspell.showMainMenu(); // go back to main menu
-					break;
+					// Passed - option to play video AND start next level, go to next level (no video), or restart current level
+					String[] options = { "Play video then go to next level" , "Go to next level" , "Restart current level" , "Return to main menu" };
+
+					int selection = customOptionPane.optionDialog("You got " + _wordsCorrectInQuiz + " words correct out of 10.\n"
+							+ "You have passed!.\n"
+							+ "You have unlocked the reward video and can proceed to the next level."
+							, "Passed!", options, options[0]);
+					switch(selection){
+					case 0:
+						playVideoAndGoToNextSpellingQuizLevel();
+						break;
+					case 1:
+						nextLevel();
+						break;
+					case 2:
+						resetFieldsReadWordsFromFileAndBeginQuiz(); // restart level
+						break;
+					case 3:
+						Voxspell.showMainMenu(); // go back to main menu
+						break;
+					}
 				}
 			}
 		}
 	}
-	
-	private void nextLevel(){
+
+	public void nextLevel(){
 		level++;
 		resetFieldsReadWordsFromFileAndBeginQuiz(); 
 	}
-	
-	private void playVideo() {
-		// TODO Auto-generated method stub
-		
+
+	private void playVideoAndGoToNextSpellingQuizLevel() {
+		VideoPlayer videoPlayer = new VideoPlayer(this);
+		videoPlayer.playVideoThenGoToNextSpellingQuizLevel();
+		// disable enter and return to main menu btn -- 
 	}
 
 	private void checkInputWord() {
@@ -206,7 +212,7 @@ public class SpellingQuiz extends JPanel {
 					firstAttempt = true;
 				}
 				stats.generateAndShowTable();
-				
+
 			} else {
 				stats.addToStats(wordList.get(0), false);
 				textToSpeech.readSentenceAndContinueSpellingQuiz("Incorrect", this);
@@ -221,7 +227,7 @@ public class SpellingQuiz extends JPanel {
 			}
 			_wordEntryField.setText(""); // clears the entry field
 		}
-		
+
 	}
-	
+
 }

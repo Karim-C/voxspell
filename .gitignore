@@ -1,7 +1,8 @@
 /bin/
 RemoteSystemsTempFiles
-206_ACP_DownloadScript
 
+### ACP STUFF ###
+206_*
 
 *.iml
 .gradle
