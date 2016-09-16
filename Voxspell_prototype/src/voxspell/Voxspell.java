@@ -55,16 +55,16 @@ public class Voxspell extends JPanel {
 		
 		/* Create base panels for the program */
 		createMainMenuPanel();
-		createNewQuizPanel();
+		_spellingQuiz = new SpellingQuiz();
 
-		/* Add the above JPanels to this JPanel using a CardLayout */
+		/* Adding MainMenu/Stats/SpellingQuiz to a cardlayout */
 		_cardLayoutPanel = new JPanel();
 		_cardLayoutPanel.setPreferredSize(new Dimension(300,450));
 		_cardLayoutPanel.setLayout(cardLayout);
 		_cardLayoutPanel.add(_mainMenuPanel, MAIN_MENU);
 		_cardLayoutPanel.add(_spellingQuiz, NEW_QUIZ);
-		this.add(_cardLayoutPanel, BorderLayout.WEST);
-
+		
+		/* Side panel to hold session statistics and settings */
 		_sidePanel = new JPanel();
 		_sidePanel.setPreferredSize(new Dimension(300,450));
 		_sidePanel.setLayout(new BorderLayout());
@@ -78,6 +78,8 @@ public class Voxspell extends JPanel {
 		_sidePanel.add(_statistics, BorderLayout.NORTH);
 		_sidePanel.add(_settings, BorderLayout.SOUTH);
 		
+		/* Adding the cardlayout and sidepanel to the overall panel */
+		this.add(_cardLayoutPanel, BorderLayout.WEST);
 		this.add(_sidePanel, BorderLayout.EAST);
 	}
 
@@ -93,10 +95,6 @@ public class Voxspell extends JPanel {
 		_mainMenuPanel.add(buttonPanel, BorderLayout.CENTER);
 
 		createMainMenuEventHandlers();
-	}
-
-	private void createNewQuizPanel() {
-		_spellingQuiz = new SpellingQuiz();
 	}
 
 	private void createMainMenuEventHandlers() {
@@ -117,7 +115,6 @@ public class Voxspell extends JPanel {
 		});
 	}
 	
-
 	public static void showMainMenu(){
 		cardLayout.show(_cardLayoutPanel, MAIN_MENU);
 	}
