@@ -23,7 +23,7 @@ public class Statistics extends JPanel {
 	private ArrayList<String[]> currentStats; // element 0: word, element 1: successes,
 										// element 2: attempts
 	
-	private static final Dimension TABLE_DIMENSION = new Dimension(260, 300);
+	private static final Dimension TABLE_DIMENSION = new Dimension(260, 250);
 	
 	private JScrollPane _tableScroll;
 	private JTable _statTable;
