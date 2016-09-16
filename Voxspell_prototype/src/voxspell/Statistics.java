@@ -53,7 +53,7 @@ public class Statistics extends JPanel {
 		_wordCountOutputArea = new JTextArea();
 		_wordCountOutputArea.setEditable(false);
 		//_wordCountOutputArea.setVisible(true);
-		_wordCountOutputArea.setText("Quiz) Correct: 0 Attempted: 0");
+		_wordCountOutputArea.setText("Current Quiz) Correct: 0 Attempted: 0");
 		// _wordCountOutputArea.setPreferredSize(new Dimension(285, 340));
 		this.add(_wordCountOutputArea, BorderLayout.NORTH);
 
@@ -190,6 +190,6 @@ public class Statistics extends JPanel {
 	 * @author Karim Cisse
 	 */
 	public void displayWordCount(int wordsCorrectFirstAttempt, int wordsAttempt) {
-		_wordCountOutputArea.setText("Quiz) Correct: " + wordsCorrectFirstAttempt + " Attempted: " + wordsAttempt);
+		_wordCountOutputArea.setText("Current Quiz) Correct: " + wordsCorrectFirstAttempt + " Attempted: " + wordsAttempt);
 	}
 }
