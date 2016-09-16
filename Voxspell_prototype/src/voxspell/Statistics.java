@@ -20,11 +20,14 @@ import javax.swing.table.TableModel;
 
 @SuppressWarnings("serial")
 public class Statistics extends JPanel {
-	ArrayList<String[]> currentStats; // element 0: word, element 1: successes,
+	private ArrayList<String[]> currentStats; // element 0: word, element 1: successes,
 										// element 2: attempts
+	
+	private static final Dimension TABLE_DIMENSION = new Dimension(260, 300);
+	
 	private JScrollPane _tableScroll;
 	private JTable _statTable;
-	private static Statistics instance = null;
+	private static Statistics instance;
 
 	// this class is a singleton
 	public static Statistics getInstance() {
@@ -39,13 +42,10 @@ public class Statistics extends JPanel {
 	 * 
 	 * @author Will Molloy
 	 */
-
 	private Statistics() {
 		currentStats = new ArrayList<String[]>();
 
 		this.setBorder(BorderFactory.createTitledBorder("Session Statistics"));
-		this.setPreferredSize(new Dimension(300, 450));
-		this.setLayout(new BorderLayout());
 		getTableAndScrollPaneInstance();
 	}
 
@@ -134,7 +134,7 @@ public class Statistics extends JPanel {
 	 * Shows the statistic table
 	 */
 	private void showTable() {
-		_statTable.setPreferredScrollableViewportSize(new Dimension(260, 400));
+		_statTable.setPreferredScrollableViewportSize(TABLE_DIMENSION);
 		_statTable.setFillsViewportHeight(true);
 		_tableScroll.setViewportView(_statTable);
 		this.repaint(); // repaints all components so that the scroll pane

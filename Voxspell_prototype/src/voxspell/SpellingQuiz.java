@@ -57,7 +57,7 @@ public class SpellingQuiz extends JPanel {
 
 	protected final void createGUI() {
 
-		this.setPreferredSize(new Dimension(305,450)); // ? sized for assignment 2, make bigger?
+		this.setPreferredSize(new Dimension(300,450)); // ? sized for assignment 2, make bigger?
 
 		// Area displayed by the program to the user
 		_programOutputArea = new JTextArea();
