@@ -1,6 +1,7 @@
 package voxspell.tools;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -29,13 +30,15 @@ import voxspell.SpellingQuiz;
  * 
  * @author will
  */
+@SuppressWarnings("serial")
 public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	
 	private static final String videoFileName = "big_buck_bunny_1_minute.avi";
-	
 	private JFrame videoFrame;
-	
 	private SpellingQuiz _spellingQuiz;
+	
+	// Button press logic
+	private boolean pausePressed = false;
 	
 	public VideoPlayer(SpellingQuiz spellingQuiz){
 		_spellingQuiz = spellingQuiz;
@@ -56,6 +59,7 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	}
 	
 	private void execute(){
+		
 		videoFrame = new JFrame("Reward Video");
 
 		final EmbeddedMediaPlayer video = this.getMediaPlayer();
@@ -64,9 +68,29 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 		panel.add(this, BorderLayout.CENTER);
 
 		videoFrame.setContentPane(panel);
-
+		
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridLayout(1,4));
+		panel.add(buttonPanel, BorderLayout.SOUTH);
+		
+		JButton btnPause = new JButton("Pause");
+		buttonPanel.add(btnPause);
+		btnPause.addActionListener((ActionEvent) ->  {
+				
+				// Changes plays and pauses video as well as changing text on button
+				if (!pausePressed){
+					video.pause();
+					btnPause.setText("Play");
+				}else {
+					video.play();
+					btnPause.setText("Pause");
+				}
+				pausePressed = !pausePressed;
+		});
+		
+		
 		JButton btnMute = new JButton("Shh....");
-		panel.add(btnMute, BorderLayout.NORTH);
+		buttonPanel.add(btnMute);
 		btnMute.addActionListener((ActionEvent) ->  {
 				video.mute();
 		});
