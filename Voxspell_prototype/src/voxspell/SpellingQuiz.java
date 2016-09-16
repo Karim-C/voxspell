@@ -32,6 +32,7 @@ public class SpellingQuiz extends JPanel {
 	private ArrayList<String> wordList;
 	private boolean firstAttempt = true;
 	private int _wordsCorrectFirstAttempt;
+	private int _wordsAttempt;
 
 	// tools
 	private FileReader fileReader = new FileReader();
@@ -112,9 +113,15 @@ public class SpellingQuiz extends JPanel {
 
 	private void resetFieldsReadWordsFromFileAndBeginQuiz() {
 		_wordsCorrectFirstAttempt = 0;
+		_wordsAttempt = 0;
 		firstAttempt = true; 
 		_programOutputArea.setText(""); // any others?
 		this.setBorder(BorderFactory.createTitledBorder("Level " + level));
+		
+		//displays the words correct and attempted as 0
+		Statistics stats = Statistics.getInstance();
+		stats.displayWordCount(_wordsCorrectFirstAttempt, _wordsAttempt);
+		
 
 		readWordsFromFile();
 		continueSpellingQuiz();
@@ -215,10 +222,12 @@ public class SpellingQuiz extends JPanel {
 		_returnToMainMenuBtn.setEnabled(true);
 		_enterWordBtn.setEnabled(true);
 	}
+	
 
 	private void checkInputWord() {
 		if (wordList.size() > 0){
 			Statistics stats = Statistics.getInstance();
+			
 			if (_wordEntryField.getText().equals(wordList.get(0))){
 				textToSpeech.readSentenceAndContinueSpellingQuiz("Correct", this);
 				_programOutputArea.append(_wordEntryField.getText() + "\n");
@@ -230,6 +239,7 @@ public class SpellingQuiz extends JPanel {
 				} else {
 					_wordsCorrectFirstAttempt++;
 				}
+				_wordsAttempt++;
 				stats.generateAndShowTable();
 
 			} else {
@@ -242,8 +252,12 @@ public class SpellingQuiz extends JPanel {
 					wordList.remove(0); // the word is removed from the list after it is seen twice
 					firstAttempt = true;
 					stats.generateAndShowTable();// resets so the next attempts can be tracked
+					_wordsAttempt++;
 				}
+				
 			}
+			stats.displayWordCount(_wordsCorrectFirstAttempt, _wordsAttempt);
+			
 			_wordEntryField.setText(""); // clears the entry field
 		}
 

@@ -15,19 +15,22 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 @SuppressWarnings("serial")
 public class Statistics extends JPanel {
-	private ArrayList<String[]> currentStats; // element 0: word, element 1: successes,
-										// element 2: attempts
-	
-	private static final Dimension TABLE_DIMENSION = new Dimension(260, 250);
-	
+	private ArrayList<String[]> currentStats; // element 0: word, element 1:
+												// successes,
+	// element 2: attempts
+
+	private static final Dimension TABLE_DIMENSION = new Dimension(260, 230);
+
 	private JScrollPane _tableScroll;
 	private JTable _statTable;
 	private static Statistics instance;
+	private JTextArea _wordCountOutputArea;
 
 	// this class is a singleton
 	public static Statistics getInstance() {
@@ -46,6 +49,14 @@ public class Statistics extends JPanel {
 		currentStats = new ArrayList<String[]>();
 
 		this.setBorder(BorderFactory.createTitledBorder("Session Statistics"));
+
+		_wordCountOutputArea = new JTextArea();
+		_wordCountOutputArea.setEditable(false);
+		//_wordCountOutputArea.setVisible(true);
+		_wordCountOutputArea.setText("Quiz) Correct: 0 Attempted: 0");
+		// _wordCountOutputArea.setPreferredSize(new Dimension(285, 340));
+		this.add(_wordCountOutputArea, BorderLayout.NORTH);
+
 		getTableAndScrollPaneInstance();
 	}
 
@@ -60,7 +71,7 @@ public class Statistics extends JPanel {
 		int index = wordAlreadyAttemptThisSession(word);
 		int success = 0;
 
-		// the success variable uses a binary representation for ture and false,
+		// the success variable uses a binary representation for true and false,
 		// 1 and 0 respectively
 		if (spelledCorrectly) {
 			success = 1;
@@ -80,7 +91,7 @@ public class Statistics extends JPanel {
 			currentStats.add(index, new String[] { word, successes, Attempts });
 		}
 	}
-	
+
 	/**
 	 * This method clears the current statistics
 	 * 
@@ -170,5 +181,15 @@ public class Statistics extends JPanel {
 		}
 		return -1;
 
+	}
+
+	/**
+	 * This method displays the number of words correct and the number of
+	 * words attempted for a given quiz
+	 * 
+	 * @author Karim Cisse
+	 */
+	public void displayWordCount(int wordsCorrectFirstAttempt, int wordsAttempt) {
+		_wordCountOutputArea.setText("Quiz) Correct: " + wordsCorrectFirstAttempt + " Attempted: " + wordsAttempt);
 	}
 }
