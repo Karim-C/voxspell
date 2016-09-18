@@ -12,6 +12,7 @@ import voxspell.tools.CustomOptionPane;
  * 
  * @author will
  */
+@SuppressWarnings("serial")
 public class ReturnToMainMenuBtn extends JButton {
 
 	public ReturnToMainMenuBtn(JPanel panelToShowPaneOn){

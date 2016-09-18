@@ -34,11 +34,11 @@ import voxspell.SpellingQuiz;
 public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	
 	private static final String videoFileName = "big_buck_bunny_1_minute.avi";
-	private JFrame videoFrame;
+	private JFrame _videoFrame;
 	private SpellingQuiz _spellingQuiz;
 	
 	// Button press logic
-	private boolean pausePressed = false;
+	private boolean _pausePressed = false;
 	
 	public VideoPlayer(SpellingQuiz spellingQuiz){
 		_spellingQuiz = spellingQuiz;
@@ -60,14 +60,14 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	
 	private void execute(){
 		
-		videoFrame = new JFrame("Reward Video");
+		_videoFrame = new JFrame("Reward Video");
 
 		final EmbeddedMediaPlayer video = this.getMediaPlayer();
 
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(this, BorderLayout.CENTER);
 
-		videoFrame.setContentPane(panel);
+		_videoFrame.setContentPane(panel);
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(1,4));
@@ -78,14 +78,14 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 		btnPause.addActionListener((ActionEvent) ->  {
 				
 				// Changes plays and pauses video as well as changing text on button
-				if (!pausePressed){
+				if (!_pausePressed){
 					video.pause();
 					btnPause.setText("Play");
 				}else {
 					video.play();
 					btnPause.setText("Pause");
 				}
-				pausePressed = !pausePressed;
+				_pausePressed = !_pausePressed;
 		});
 		
 		
@@ -95,13 +95,13 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 				video.mute();
 		});
 
-		videoFrame.setLocation(100, 100);
-		videoFrame.setSize(1050, 600);
-		videoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // SO entire program doesn't close!
-		videoFrame.setVisible(true);		
+		_videoFrame.setLocation(100, 100);
+		_videoFrame.setSize(1050, 600);
+		_videoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // SO entire program doesn't close!
+		_videoFrame.setVisible(true);		
 		video.playMedia(videoFileName);
 		
-		videoFrame.addWindowListener(new WindowAdapter(){
+		_videoFrame.addWindowListener(new WindowAdapter(){
 			@Override
 			public void windowClosing(WindowEvent e){
 				video.stop();
@@ -112,7 +112,7 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	
 	@Override
 	public void finished(MediaPlayer mediaPlayer){
-		videoFrame.dispose(); // closes only the JFrame with the video, not entire voxspell program
+		_videoFrame.dispose(); // closes only the JFrame with the video, not entire voxspell program
 		_spellingQuiz.nextLevel();
 		super.finished(mediaPlayer);
 	}

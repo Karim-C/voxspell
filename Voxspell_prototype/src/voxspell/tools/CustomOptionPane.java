@@ -8,6 +8,7 @@ import javax.swing.JPanel;
  * @author will
  *
  */
+@SuppressWarnings("serial")
 public class CustomOptionPane extends JOptionPane {
 
 	private JPanel _panelToShowOn;

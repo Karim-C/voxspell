@@ -16,6 +16,7 @@ public class TextToSpeech {
 
 	private FestivalWorker festivalWorker;
 	private boolean _continueSpellingQuiz = false;
+	private boolean _slowerVoice = false;
 	private SpellingQuiz _spellingQuiz;
 	
 	// Singleton
@@ -57,6 +58,14 @@ public class TextToSpeech {
 	}
 	
 	/**
+	 * Reads out a sentence slowly using text to speech.
+	 */
+	public void readSentenceSlowly(String sentence){
+		_slowerVoice = true;
+		readSentence(sentence);
+	}
+	
+	/**
 	 * Reads out the letters of a word or sentence using text to speech.
 	 */
 	public void readLetters(String word) {
@@ -93,6 +102,12 @@ public class TextToSpeech {
 			
 			String appendVoiceToScmFile = "echo \"" + voice + "\" >> " + hiddenScmFile;
 			runBashCommand(appendVoiceToScmFile);
+			
+			if (_slowerVoice){
+				String slowDown = "echo \"(Parameter.set 'Duration_Stretch 2.2)\" >> " + hiddenScmFile;
+				runBashCommand(slowDown);
+				_slowerVoice = false;
+			}
 			
 			String sayText = "echo \"(SayText \\\"" + _sentence + "\\\")\" >> " + hiddenScmFile;
 			runBashCommand(sayText);

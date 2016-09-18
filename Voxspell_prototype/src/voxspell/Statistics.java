@@ -47,16 +47,13 @@ public class Statistics extends JPanel {
 	 */
 	private Statistics() {
 		currentStats = new ArrayList<String[]>();
-
 		this.setBorder(BorderFactory.createTitledBorder("Session Statistics"));
 
 		_wordCountOutputArea = new JTextArea();
 		_wordCountOutputArea.setEditable(false);
-		//_wordCountOutputArea.setVisible(true);
 		_wordCountOutputArea.setText("Current Quiz) Correct: 0 Attempted: 0");
-		// _wordCountOutputArea.setPreferredSize(new Dimension(285, 340));
+		
 		this.add(_wordCountOutputArea, BorderLayout.NORTH);
-
 		getTableAndScrollPaneInstance();
 	}
 

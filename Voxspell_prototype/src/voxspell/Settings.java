@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import voxspell.tools.TextToSpeech;
 
+@SuppressWarnings("serial")
 public class Settings extends JPanel {
 	
 	// Voice combobox
