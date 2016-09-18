@@ -29,16 +29,16 @@ public class SpellingQuiz extends JPanel {
 
 	// game logic
 	private static final int NUM_OF_LEVELS = 10;
-	private int level;
-	private static String[] levels;
-	private ArrayList<String> wordList;
-	private boolean firstAttempt = true;
+	private int _level;
+	private static String[] _levels;
+	private ArrayList<String> _wordList;
+	private boolean _firstAttempt = true;
 	private int _wordsCorrectFirstAttempt;
 	private int _wordsAttempt;
 
 	// tools
-	private FileReader fileReader = new FileReader();
-	private TextToSpeech textToSpeech = TextToSpeech.getInstance();
+	private FileReader _fileReader = new FileReader();
+	private TextToSpeech _textToSpeech = TextToSpeech.getInstance();
 
 	/**
 	 * Build GUI and configure
@@ -49,10 +49,10 @@ public class SpellingQuiz extends JPanel {
 	}
 
 	private void initLevels() {
-		if (levels == null) {
-			levels = new String[NUM_OF_LEVELS];
+		if (_levels == null) {
+			_levels = new String[NUM_OF_LEVELS];
 			for (int i = 1; i <= NUM_OF_LEVELS; i++) {
-				levels[i - 1] = i + "";
+				_levels[i - 1] = i + "";
 			}
 		}
 	}
@@ -74,10 +74,12 @@ public class SpellingQuiz extends JPanel {
 
 		// Btn pressed by user after entering word
 		_enterWordBtn = new JButton("Enter");
+		_enterWordBtn.setPreferredSize(new Dimension(75,25));	/* default 5px between buttons */
 		this.add(_enterWordBtn, BorderLayout.WEST);
-
-		// Button pressed by user to repeat word
+				
+		// Button pressed by user to repeat word		
 		_repeatWordBtn = new JButton("Repeat Word");
+		_repeatWordBtn.setPreferredSize(new Dimension(130,25));
 		this.add(_repeatWordBtn, BorderLayout.EAST);
 
 		_returnToMainMenuBtn = new ReturnToMainMenuBtn(this);
@@ -94,7 +96,7 @@ public class SpellingQuiz extends JPanel {
 		
 		_repeatWordBtn.addActionListener((ActionListener) -> {
 			// Repeats the word when the user presses the repeat button
-			textToSpeech.readSentenceSlowly(wordList.get(0));
+			_textToSpeech.readSentenceSlowly(_wordList.get(0));
 		});
 	}
 	
@@ -116,21 +118,21 @@ public class SpellingQuiz extends JPanel {
 
 	private void promptUserForInitialLevel() {
 		String whatLevel = (String) JOptionPane.showInputDialog(this, "What level to start at?", "What level?",
-				JOptionPane.QUESTION_MESSAGE, null, levels, levels[0]);
+				JOptionPane.QUESTION_MESSAGE, null, _levels, _levels[0]);
 
 		try {
-			level = Integer.parseInt(whatLevel);
+			_level = Integer.parseInt(whatLevel);
 		} catch (NumberFormatException e) {
-			level = 1; // if user pressed cancel
+			_level = 1; // if user pressed cancel
 		}
 	}
 
 	private void resetFieldsReadWordsFromFileAndBeginQuiz() {
 		_wordsCorrectFirstAttempt = 0;
 		_wordsAttempt = 0;
-		firstAttempt = true;
+		_firstAttempt = true;
 		_programOutputArea.setText(""); // any others?
-		this.setBorder(BorderFactory.createTitledBorder("Level " + level));
+		this.setBorder(BorderFactory.createTitledBorder("Level " + _level));
 
 		// displays the words correct and attempted as 0
 		Statistics stats = Statistics.getInstance();
@@ -141,7 +143,7 @@ public class SpellingQuiz extends JPanel {
 	}
 
 	private void readWordsFromFile() {
-		wordList = fileReader.getWordList(level);
+		_wordList = _fileReader.getWordList(_level);
 	}
 
 	/**
@@ -150,17 +152,17 @@ public class SpellingQuiz extends JPanel {
 	public void continueSpellingQuiz() {
 
 		// when the wordList is empty the quiz is finished
-		if (wordList.size() > 0) {
+		if (_wordList.size() > 0) {
 
-			if (firstAttempt) {
-				String line = "Please spell ... " + wordList.get(0);
-				_programOutputArea.append("Spell word " + (11 - wordList.size()) + " of 10: ");
-				textToSpeech.readSentence(line);
+			if (_firstAttempt) {
+				String line = "Please spell ... " + _wordList.get(0);
+				_programOutputArea.append("Spell word " + (11 - _wordList.size()) + " of 10: ");
+				_textToSpeech.readSentence(line);
 			} else {
-				String line = "try once more. " + wordList.get(0) + " ... " + wordList.get(0);
+				String line = "try once more. " + _wordList.get(0) + " ... " + _wordList.get(0);
 				_programOutputArea.append("Incorrect, try once more: ");
-				textToSpeech.readSentence(line);
-				firstAttempt = false; // resets so the next attempts can be tracked
+				_textToSpeech.readSentence(line);
+				_firstAttempt = false; // resets so the next attempts can be tracked
 
 			}
 		} else {
@@ -171,7 +173,7 @@ public class SpellingQuiz extends JPanel {
 				/* User has failed the quiz */
 				finishedQuizOptionPane.failedLevelOptionPane();
 			} else {
-				if (level == 10) {
+				if (_level == 10) {
 					/* User has passed level 10 */
 					finishedQuizOptionPane.passedGameOptionPane();
 				} else {
@@ -183,19 +185,19 @@ public class SpellingQuiz extends JPanel {
 	}
 	
 	private void checkInputWord() {
-		if (wordList.size() > 0) {
+		if (_wordList.size() > 0) {
 			Statistics stats = Statistics.getInstance();
 
-			if (_wordEntryField.getText().equals(wordList.get(0))) {
-				textToSpeech.readSentenceAndContinueSpellingQuiz("Correct", this);
+			if (_wordEntryField.getText().equals(_wordList.get(0))) {
+				_textToSpeech.readSentenceAndContinueSpellingQuiz("Correct", this);
 				_programOutputArea.append(_wordEntryField.getText() + "\n");
 
-				stats.addToStats(wordList.get(0), true); // the word is recorded in the statistics
+				stats.addToStats(_wordList.get(0), true); // the word is recorded in the statistics
 
-				wordList.remove(0);// the word is removed from the list when it is correctly spelled
+				_wordList.remove(0);// the word is removed from the list when it is correctly spelled
 
-				if (!firstAttempt) {
-					firstAttempt = true;
+				if (!_firstAttempt) {
+					_firstAttempt = true;
 				} else {
 					_wordsCorrectFirstAttempt++;
 				}
@@ -204,15 +206,15 @@ public class SpellingQuiz extends JPanel {
 
 			} else {
 
-				stats.addToStats(wordList.get(0), false);
-				textToSpeech.readSentenceAndContinueSpellingQuiz("Incorrect", this);
+				stats.addToStats(_wordList.get(0), false);
+				_textToSpeech.readSentenceAndContinueSpellingQuiz("Incorrect", this);
 				_programOutputArea.append(_wordEntryField.getText() + "\n");
 
-				if (firstAttempt) {
-					firstAttempt = false; // the next attempt will no longer be the first
+				if (_firstAttempt) {
+					_firstAttempt = false; // the next attempt will no longer be the first
 				} else {
-					wordList.remove(0); // the word is removed from the list after it is seen twice
-					firstAttempt = true;
+					_wordList.remove(0); // the word is removed from the list after it is seen twice
+					_firstAttempt = true;
 					stats.generateAndShowTable();// resets so the next attempts can be tracked
 					_wordsAttempt++;
 				}
@@ -226,7 +228,7 @@ public class SpellingQuiz extends JPanel {
 	}
 
 	public void nextLevel() {
-		level++;
+		_level++;
 		restartLevel();
 	}
 

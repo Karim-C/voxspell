@@ -16,7 +16,7 @@ import voxspell.tools.CustomOptionPane;
 public class ReturnToMainMenuBtn extends JButton {
 
 	public ReturnToMainMenuBtn(JPanel panelToShowPaneOn){
-		super("Return to Main Menu"); // name of button
+		super("Return to the Main Menu"); // name of button
 		
 		this.addActionListener( (ActionListener) -> {
 			

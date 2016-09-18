@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -23,14 +23,14 @@ import javax.swing.table.TableModel;
 public class Statistics extends JPanel {
 	private ArrayList<String[]> currentStats; // element 0: word, element 1:
 												// successes,
-	// element 2: attempts
+												// element 2: attempts
 
 	private static final Dimension TABLE_DIMENSION = new Dimension(260, 230);
 
 	private JScrollPane _tableScroll;
 	private JTable _statTable;
 	private static Statistics instance;
-	private JTextArea _wordCountOutputArea;
+	private JLabel _wordCountOutputArea;
 
 	// this class is a singleton
 	public static Statistics getInstance() {
@@ -49,8 +49,7 @@ public class Statistics extends JPanel {
 		currentStats = new ArrayList<String[]>();
 		this.setBorder(BorderFactory.createTitledBorder("Session Statistics"));
 
-		_wordCountOutputArea = new JTextArea();
-		_wordCountOutputArea.setEditable(false);
+		_wordCountOutputArea = new JLabel();
 		_wordCountOutputArea.setText("Current Quiz) Correct: 0 Attempted: 0");
 		
 		this.add(_wordCountOutputArea, BorderLayout.NORTH);

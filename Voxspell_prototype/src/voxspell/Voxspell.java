@@ -46,9 +46,9 @@ public class Voxspell extends JPanel {
 	private static final String CLEAR_STATS = "Clear Statistics";
 
 	// Main menu buttons
-	private JButton _newSpellingQuizBtn = new JButton(NEW_QUIZ);
-	private JButton _viewStatsBtn = new JButton(VIEW_STATS);
-	private JButton _clearStatsBtn = new JButton(CLEAR_STATS);
+	private JButton _newSpellingQuizBtn;
+	private JButton _viewStatsBtn;
+	private JButton _clearStatsBtn;
 
 	private Voxspell() {  
 		this.setLayout(new BorderLayout());
@@ -72,7 +72,7 @@ public class Voxspell extends JPanel {
 		_statistics = Statistics.getInstance();
 		_statistics.setPreferredSize(new Dimension(300,300));
 		
-		_settings = Settings.getInstance();
+		_settings = Settings.getInstance(this);
 		_settings.setPreferredSize(new Dimension(300,150));
 		
 		_sidePanel.add(_statistics, BorderLayout.NORTH);
@@ -85,8 +85,12 @@ public class Voxspell extends JPanel {
 
 	private void createMainMenuPanel() {
 		_mainMenuPanel = new JPanel();
-		_mainMenuPanel.setBorder(BorderFactory.createTitledBorder("Welcome to the Spelling Aid"));
+		_mainMenuPanel.setBorder(BorderFactory.createTitledBorder("Welcome to Voxspell!"));
 
+		_newSpellingQuizBtn = new JButton(NEW_QUIZ);
+		_viewStatsBtn = new JButton(VIEW_STATS);
+		_clearStatsBtn = new JButton(CLEAR_STATS);
+		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(4,1));
 		buttonPanel.add(_newSpellingQuizBtn);
@@ -122,7 +126,7 @@ public class Voxspell extends JPanel {
 	private static void createAndShowGUI() {
 		Voxspell mainPanel = new Voxspell();
 
-		JFrame frame = new JFrame("Spelling Aid");
+		JFrame frame = new JFrame("Voxspell");
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e){

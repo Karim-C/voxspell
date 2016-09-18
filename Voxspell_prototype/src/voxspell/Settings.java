@@ -1,24 +1,36 @@
 package voxspell;
 
+import java.awt.Font;
+import java.util.Enumeration;
+
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
+
 import voxspell.tools.TextToSpeech;
 
 @SuppressWarnings("serial")
 public class Settings extends JPanel {
 	
+	// Voxspell instance - needed to repaint GUI components. E.g. if changing font size
+	private Voxspell _voxspellInstance;
+	
 	// Voice combobox
 	private static final String[] _ttsVoices = { "Kal" , "Rab" }; 
 	private JComboBox<String> _ttsVoiceComboBox;
 	
+	// Fontsize combobox
+	private static final String[] _fontSizes = { "10" , "12" , "14" , "16" , "18" };
+	private JComboBox<String> _fontSizeComboBox;
 
 	// this class is a singleton
 	private static Settings instance = null;
-	public static Settings getInstance() {
+	public static Settings getInstance(Voxspell voxspell) {
 		if (instance == null) {
-			instance = new Settings();
+			instance = new Settings(voxspell);
 		}
 		return instance;
 	}
@@ -28,8 +40,9 @@ public class Settings extends JPanel {
 	 * 
 	 * @author Will Molloy
 	 */
-	private Settings() {
-
+	private Settings(Voxspell voxspell) {
+		_voxspellInstance = voxspell;
+		
 		/* GUI */
 		this.setBorder(BorderFactory.createTitledBorder("Settings"));
 		
@@ -39,14 +52,18 @@ public class Settings extends JPanel {
 		_ttsVoiceComboBox = new JComboBox<String>(_ttsVoices);
 		this.add(_ttsVoiceComboBox);
 	
-		// maybe font size setting later (using MVC)
+		// Font size
+		JLabel fontSizeText = new JLabel("Font Size:" );
+		this.add(fontSizeText);
+		_fontSizeComboBox = new JComboBox<String>(_fontSizes);
+		this.add(_fontSizeComboBox);
 		
 		/* Event handlers for Settings */
-		createVoiceDropDownEventHandler();
-
+		voiceDropDownEventHandler();
+		fontSizeEventHandler();
 	}
 	
-	private void createVoiceDropDownEventHandler() {
+	private void voiceDropDownEventHandler() {
 		_ttsVoiceComboBox.addActionListener( (ActionListener) -> {
 			String voice = (String) _ttsVoiceComboBox.getSelectedItem();
 			String voiceCommand = getFestivalVoiceCommand(voice);
@@ -63,6 +80,35 @@ public class Settings extends JPanel {
 		default:
 			return "(voice_kal_diphone)";
 		} 
+	}
+	
+	private void fontSizeEventHandler(){
+		_fontSizeComboBox.addActionListener( (ActionListener) -> {
+			String item = (String) _fontSizeComboBox.getSelectedItem();
+			int fontSize = Integer.parseInt(item);
+			setFontSize(fontSize);
+		});
+	}
+	
+	/*
+	 * Sets font size of the voxspell instance.
+	 * Using code from http://stackoverflow.com/a/2989344
+	 */
+	public void setFontSize(int fontSize){
+		FontUIResource f = new FontUIResource(new Font("Arial", 0, fontSize));
+		Enumeration<Object> keys = UIManager.getLookAndFeelDefaults().keys();
+		
+		  while (keys.hasMoreElements()) {
+	            Object key = keys.nextElement();
+	            Object value = UIManager.get(key);
+	            if (value instanceof FontUIResource) {
+	                FontUIResource orig = (FontUIResource) value;
+	                Font font = new Font(f.getFontName(), orig.getStyle(), f.getSize());
+	                UIManager.put(key, new FontUIResource(font));
+	            }
+	        }
+		_voxspellInstance.validate();
+		_voxspellInstance.repaint();
 	}
 	
 }
