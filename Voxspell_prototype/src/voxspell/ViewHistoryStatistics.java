@@ -15,6 +15,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import voxspell.tools.CaseInsensitiveComparator;
 import voxspell.tools.CustomFileReader;
 
 @SuppressWarnings("serial")
@@ -72,7 +73,7 @@ public class ViewHistoryStatistics extends JPanel {
 			_fileReader.readFileByLineIntoSet(FileManager.STATS_FAILED, wordsToDisplay);
 
 		_sortedWordsToDisplay = new ArrayList<String>(wordsToDisplay);
-		Collections.sort(_sortedWordsToDisplay); // alphabetical order
+		Collections.sort(_sortedWordsToDisplay, new CaseInsensitiveComparator()); // alphabetical order
 	}
 
 	/**
@@ -88,8 +89,9 @@ public class ViewHistoryStatistics extends JPanel {
 		// Read the hidden files keeping a count of mastered, faulted and failed for each word
 		for (String word : _sortedWordsToDisplay){
 					int mastered = _fileReader.getWordCountFromFile(word, FileManager.STATS_MASTERED);
+					int faulted = _fileReader.getWordCountFromFile(word, FileManager.STATS_FAULTED);
 					int failed = _fileReader.getWordCountFromFile(word, FileManager.STATS_FAILED);
-			stats.add(new String[] { word , mastered +"" , failed +"" });
+			stats.add(new String[] { word , mastered +"", faulted+"" , failed +"" });
 		}
 
 		// Create the JTable using the List of stats and String[] of columnNames

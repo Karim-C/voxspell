@@ -89,7 +89,6 @@ public class CustomFileReader {
 	 * Reads words line by line from a file into a HashSet.
 	 */
 	public void readFileByLineIntoSet(File file, HashSet<String> words){
-		words = new HashSet<String>();
 		String word;
 		BufferedReader reader;
 		try {
