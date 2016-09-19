@@ -1,11 +1,18 @@
 package voxspell.tools;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 
-public class FileReader {
+public class CustomFileReader {
 
 	public ArrayList<String> getWordList(int level) {
 		ArrayList<String> wordList = readInWords(level);
@@ -62,4 +69,57 @@ public class FileReader {
 
 		return wordList;
 	}
+	
+	/** 
+	 * Appends a word to a file.
+	 */
+	public void appendWordToFile(String word, File file){
+		BufferedWriter writer;
+		try {
+			writer = new BufferedWriter(new FileWriter(file, true));
+			writer.write(word);
+			writer.newLine();
+			writer.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Reads words line by line from a file into a HashSet.
+	 */
+	public void readFileByLineIntoSet(File file, HashSet<String> words){
+		words = new HashSet<String>();
+		String word;
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			while ((word = reader.readLine()) != null){
+				words.add(word);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Gets a count of lines containing 'word' in 'file'
+	 */
+	public int getWordCountFromFile(String word, File file) {
+		BufferedReader reader;
+		String temp;
+		int count = 0;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			while ((temp = reader.readLine()) != null){
+				if (temp.equals(word)){
+					count++;
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+	
 }

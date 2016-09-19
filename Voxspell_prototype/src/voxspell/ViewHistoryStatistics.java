@@ -1,0 +1,121 @@
+package voxspell;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+import voxspell.tools.CustomFileReader;
+
+@SuppressWarnings("serial")
+public class ViewHistoryStatistics extends JPanel {
+
+	// Datatypes to hold words
+	private List<String> _sortedWordsToDisplay;
+
+	// Swing componenets
+	private JTable _statTable;
+	private JScrollPane _tableScroll;
+
+	// tools
+	private CustomFileReader _fileReader = new CustomFileReader();
+	
+	/**
+	 * Creates the base JPanel for ViewStats
+	 */
+	public ViewHistoryStatistics(){
+		this.setBorder(BorderFactory.createTitledBorder("View Statistics"));
+		this.setPreferredSize(new Dimension(300,250));
+		this.setLayout(new BorderLayout());
+		getTableAndScrollPaneInstance();
+		this.add(new ReturnToMainMenuBtn(this), BorderLayout.SOUTH);
+	}
+
+	/**
+	 * Adds empty scroll pane to this JPanel which will later hold the statistic table.
+	 * Only initialised once so that statTable can be updated at run time.
+	 */
+	private void getTableAndScrollPaneInstance() {
+		if (_tableScroll == null){
+			_tableScroll = new JScrollPane();
+			this.add(_tableScroll, BorderLayout.NORTH);
+		}
+	}
+
+	/**
+	 * Generates a Table of statistics based on what is in the hidden statistic files.
+	 */
+	protected void generateAndShowStats(){
+		// read hidden files then generate and show the table of statistics.
+		readStatisticFiles();
+		generateAndShowTable();
+	}
+
+	/**
+	 * Reads all of the words from the hidden statistic files: mastered, failed and faulted into a set.
+	 * Then places the set in an ArrayList so that it can be sorted alphabetically.
+	 */
+	private void readStatisticFiles() {
+		HashSet<String> wordsToDisplay = new HashSet<String>();
+
+			_fileReader.readFileByLineIntoSet(FileManager.STATS_MASTERED, wordsToDisplay);
+			_fileReader.readFileByLineIntoSet(FileManager.STATS_FAILED, wordsToDisplay);
+
+		_sortedWordsToDisplay = new ArrayList<String>(wordsToDisplay);
+		Collections.sort(_sortedWordsToDisplay); // alphabetical order
+	}
+
+	/**
+	 * Generates the statistics table based on what is in the sorted list 'sortedWordsToDisplay'
+	 * and is in the hidden statistic files.
+	 * 
+	 * Found code here: http://stackoverflow.com/a/11095952/6122976
+	 */
+	private void generateAndShowTable() {
+		String[] columnNames = { "Word" , "Mastered" , "Faulted" , "Failed" };
+		List<String[]> stats = new ArrayList<String[]>();
+
+		// Read the hidden files keeping a count of mastered, faulted and failed for each word
+		for (String word : _sortedWordsToDisplay){
+					int mastered = _fileReader.getWordCountFromFile(word, FileManager.STATS_MASTERED);
+					int failed = _fileReader.getWordCountFromFile(word, FileManager.STATS_FAILED);
+			stats.add(new String[] { word , mastered +"" , failed +"" });
+		}
+
+		// Create the JTable using the List of stats and String[] of columnNames
+		TableModel tableModel = new DefaultTableModel(stats.toArray(new Object[][] {}), columnNames){
+			@Override	// Makes all of the cells in the table uneditable
+			public boolean isCellEditable(int row, int column){
+				return false;
+			}
+		};
+		_statTable = new JTable(tableModel);		
+		showTable();
+
+		// Let the user know if there are no stats -- down here so that it shows the table as empty
+		if (_sortedWordsToDisplay.size() == 0){
+			JOptionPane.showMessageDialog(this, "No statistics to show!",
+					"No Statistics", JOptionPane.PLAIN_MESSAGE);
+		}
+	}
+
+	/**
+	 * Shows the statistic table
+	 */
+	private void showTable() {
+		_statTable.setPreferredScrollableViewportSize(new Dimension(260,180));
+		_statTable.setFillsViewportHeight(true);
+		_tableScroll.setViewportView(_statTable);
+		this.repaint(); // repaints all components so that the scroll pane adjusts to the new table size
+	}
+}

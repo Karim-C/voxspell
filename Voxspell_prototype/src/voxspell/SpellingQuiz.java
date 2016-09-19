@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import voxspell.tools.FileReader;
+import voxspell.tools.CustomFileReader;
 import voxspell.tools.TextToSpeech;
 import voxspell.tools.VideoPlayer;
 
@@ -37,7 +37,7 @@ public class SpellingQuiz extends JPanel {
 	private int _wordsAttempt;
 
 	// tools
-	private FileReader _fileReader = new FileReader();
+	private CustomFileReader _fileReader = new CustomFileReader();
 	private TextToSpeech _textToSpeech = TextToSpeech.getInstance();
 
 	/**

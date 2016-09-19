@@ -1,5 +1,6 @@
 package voxspell;
 
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -31,6 +32,7 @@ public class Voxspell extends JPanel {
 	private JPanel _mainMenuPanel;
 	private static JPanel _cardLayoutPanel;
 	private SpellingQuiz _spellingQuiz;
+	private ViewHistoryStatistics _viewStatistics = new ViewHistoryStatistics();
 	
 	// Other Panels next to the card layout - Statistics and Settings
 	private Statistics _statistics;
@@ -53,6 +55,9 @@ public class Voxspell extends JPanel {
 	private Voxspell() {  
 		this.setLayout(new BorderLayout());
 		
+		/* Create Hidden statistic files */
+		FileManager.createHiddenFiles();
+		
 		/* Create base panels for the program */
 		createMainMenuPanel();
 		_spellingQuiz = new SpellingQuiz();
@@ -63,6 +68,7 @@ public class Voxspell extends JPanel {
 		_cardLayoutPanel.setLayout(cardLayout);
 		_cardLayoutPanel.add(_mainMenuPanel, MAIN_MENU);
 		_cardLayoutPanel.add(_spellingQuiz, NEW_QUIZ);
+		_cardLayoutPanel.add(_viewStatistics, VIEW_STATS);
 		
 		/* Side panel to hold session statistics and settings */
 		_sidePanel = new JPanel();
@@ -109,6 +115,7 @@ public class Voxspell extends JPanel {
 
 		_viewStatsBtn.addActionListener( (ActionListener) -> {
 			cardLayout.show(_cardLayoutPanel, VIEW_STATS);
+			_viewStatistics.generateAndShowStats();
 		});
 
 		_clearStatsBtn.addActionListener( (ActionListener) -> {
