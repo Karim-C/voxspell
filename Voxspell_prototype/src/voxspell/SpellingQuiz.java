@@ -135,7 +135,7 @@ public class SpellingQuiz extends JPanel {
 		this.setBorder(BorderFactory.createTitledBorder("Level " + _level));
 
 		// displays the words correct and attempted as 0
-		Statistics stats = Statistics.getInstance();
+		SessionStatistics stats = SessionStatistics.getInstance();
 		stats.displayWordCount(_wordsCorrectFirstAttempt, _wordsAttempt);
 
 		readWordsFromFile();
@@ -186,7 +186,7 @@ public class SpellingQuiz extends JPanel {
 	
 	private void checkInputWord() {
 		if (_wordList.size() > 0) {
-			Statistics stats = Statistics.getInstance();
+			SessionStatistics stats = SessionStatistics.getInstance();
 
 			if (_wordEntryField.getText().equals(_wordList.get(0))) {
 				_textToSpeech.readSentenceAndContinueSpellingQuiz("Correct", this);

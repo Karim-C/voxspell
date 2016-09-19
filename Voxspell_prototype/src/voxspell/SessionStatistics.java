@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 @SuppressWarnings("serial")
-public class Statistics extends JPanel {
+public class SessionStatistics extends JPanel {
 	private ArrayList<String[]> currentStats; // element 0: word, element 1:
 												// successes,
 												// element 2: attempts
@@ -29,13 +29,13 @@ public class Statistics extends JPanel {
 
 	private JScrollPane _tableScroll;
 	private JTable _statTable;
-	private static Statistics instance;
+	private static SessionStatistics instance;
 	private JLabel _wordCountOutputArea;
 
 	// this class is a singleton
-	public static Statistics getInstance() {
+	public static SessionStatistics getInstance() {
 		if (instance == null) {
-			instance = new Statistics();
+			instance = new SessionStatistics();
 		}
 		return instance;
 	}
@@ -45,7 +45,7 @@ public class Statistics extends JPanel {
 	 * 
 	 * @author Will Molloy
 	 */
-	private Statistics() {
+	private SessionStatistics() {
 		currentStats = new ArrayList<String[]>();
 		this.setBorder(BorderFactory.createTitledBorder("Session Statistics"));
 

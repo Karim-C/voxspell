@@ -35,7 +35,7 @@ public class Voxspell extends JPanel {
 	private ViewHistoryStatistics _viewStatistics = new ViewHistoryStatistics();
 	
 	// Other Panels next to the card layout - Statistics and Settings
-	private Statistics _statistics;
+	private SessionStatistics _statistics;
 	private Settings _settings;
 	
 	// Panel to hold these other panels
@@ -75,7 +75,7 @@ public class Voxspell extends JPanel {
 		_sidePanel.setPreferredSize(new Dimension(300,450));
 		_sidePanel.setLayout(new BorderLayout());
 		
-		_statistics = Statistics.getInstance();
+		_statistics = SessionStatistics.getInstance();
 		_statistics.setPreferredSize(new Dimension(300,300));
 		
 		_settings = Settings.getInstance(this);
