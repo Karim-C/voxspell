@@ -94,6 +94,20 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 		btnMute.addActionListener((ActionEvent) ->  {
 				video.mute();
 		});
+		
+		// Allows the user to go forwards 5 seconds
+		JButton btnSkip = new JButton("Forward");
+		buttonPanel.add(btnSkip);
+		btnSkip.addActionListener((ActionEvent) ->  {
+				video.skip(5000);
+		});
+		
+		// Allows the user to go back 5 seconds
+		JButton btnBackSkip = new JButton("Back");
+		buttonPanel.add(btnBackSkip);
+		btnBackSkip.addActionListener((ActionEvent) ->  {
+				video.skip(-5000);
+		});
 
 		_videoFrame.setLocation(100, 100);
 		_videoFrame.setSize(1050, 600);
