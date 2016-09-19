@@ -39,6 +39,7 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	
 	// Button press logic
 	private boolean _pausePressed = false;
+	private boolean _mutePressed = false;
 	
 	public VideoPlayer(SpellingQuiz spellingQuiz){
 		_spellingQuiz = spellingQuiz;
@@ -77,7 +78,7 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 		buttonPanel.add(btnPause);
 		btnPause.addActionListener((ActionEvent) ->  {
 				
-				// Changes plays and pauses video as well as changing text on button
+				// The text on the button changes after the user pauses to play and vice versa
 				if (!_pausePressed){
 					video.pause();
 					btnPause.setText("Play");
@@ -89,10 +90,19 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 		});
 		
 		
-		JButton btnMute = new JButton("Shh....");
+		JButton btnMute = new JButton("Mute");
 		buttonPanel.add(btnMute);
 		btnMute.addActionListener((ActionEvent) ->  {
 				video.mute();
+				
+				// The text on the button changes after the user mute to unmute and vice versa
+				if (!_mutePressed) {
+					btnMute.setText("Unmute");
+					_mutePressed = true;
+				} else {
+					btnMute.setText("Mute");
+					_mutePressed = false;
+				}
 		});
 		
 		// Allows the user to go forwards 5 seconds
