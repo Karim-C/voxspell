@@ -35,7 +35,7 @@ public class Voxspell extends JPanel {
 	private ViewHistoryStatistics _viewStatistics = new ViewHistoryStatistics();
 	
 	// Other Panels next to the card layout - Statistics and Settings
-	private SessionStatistics _statistics;
+	private SessionStatistics _sessionStatistics;
 	private Settings _settings;
 	
 	// Panel to hold these other panels
@@ -75,13 +75,13 @@ public class Voxspell extends JPanel {
 		_sidePanel.setPreferredSize(new Dimension(300,450));
 		_sidePanel.setLayout(new BorderLayout());
 		
-		_statistics = SessionStatistics.getInstance();
-		_statistics.setPreferredSize(new Dimension(300,300));
+		_sessionStatistics = SessionStatistics.getInstance();
+		_sessionStatistics.setPreferredSize(new Dimension(300,300));
 		
 		_settings = Settings.getInstance(this);
 		_settings.setPreferredSize(new Dimension(300,150));
 		
-		_sidePanel.add(_statistics, BorderLayout.NORTH);
+		_sidePanel.add(_sessionStatistics, BorderLayout.NORTH);
 		_sidePanel.add(_settings, BorderLayout.SOUTH);
 		
 		/* Adding the cardlayout and sidepanel to the overall panel */
@@ -121,7 +121,8 @@ public class Voxspell extends JPanel {
 		_clearStatsBtn.addActionListener( (ActionListener) -> {
 			CustomOptionPane customOptionPane = new CustomOptionPane(this);
 			if (customOptionPane.yesNoDialog("Clear statistics, are you sure?", "Clearing statistics")){
-				_statistics.clearStats();
+				_sessionStatistics.clearStats();
+				ViewHistoryStatistics.clearStatistics();
 			}
 		});
 	}

@@ -69,21 +69,21 @@ public class SpellingQuiz extends JPanel {
 
 		// Where user enters the word
 		_wordEntryField = new JTextField();
-		_wordEntryField.setPreferredSize(new Dimension(210, 25));
+		_wordEntryField.setPreferredSize(new Dimension(230, 25));
 		this.add(_wordEntryField, BorderLayout.EAST);
 
 		// Btn pressed by user after entering word
 		_enterWordBtn = new JButton("Enter");
-		_enterWordBtn.setPreferredSize(new Dimension(75,25));	/* default 5px between buttons */
+		_enterWordBtn.setPreferredSize(new Dimension(85,25));	/* default 5px between buttons */
 		this.add(_enterWordBtn, BorderLayout.WEST);
 				
 		// Button pressed by user to repeat word		
 		_repeatWordBtn = new JButton("Repeat Word");
-		_repeatWordBtn.setPreferredSize(new Dimension(130,25));
+		_repeatWordBtn.setPreferredSize(new Dimension(140,25));
 		this.add(_repeatWordBtn, BorderLayout.EAST);
 
 		_returnToMainMenuBtn = new ReturnToMainMenuBtn(this);
-		_returnToMainMenuBtn.setPreferredSize(new Dimension(210, 25));
+		_returnToMainMenuBtn.setPreferredSize(new Dimension(230, 25));
 		this.add(_returnToMainMenuBtn, BorderLayout.SOUTH);
 
 		createEventHandlers();

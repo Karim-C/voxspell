@@ -27,6 +27,7 @@ public class ViewHistoryStatistics extends JPanel {
 	// Swing componenets
 	private JTable _statTable;
 	private JScrollPane _tableScroll;
+	private ReturnToMainMenuBtn _returnToMainMenuBtn;
 
 	// tools
 	private CustomFileReader _fileReader = new CustomFileReader();
@@ -35,11 +36,18 @@ public class ViewHistoryStatistics extends JPanel {
 	 * Creates the base JPanel for ViewStats
 	 */
 	public ViewHistoryStatistics(){
-		this.setBorder(BorderFactory.createTitledBorder("View Statistics"));
+		this.setBorder(BorderFactory.createTitledBorder("History Statistics"));
+		
 		this.setPreferredSize(new Dimension(300,250));
-		this.setLayout(new BorderLayout());
 		getTableAndScrollPaneInstance();
-		this.add(new ReturnToMainMenuBtn(this), BorderLayout.SOUTH);
+		
+		_returnToMainMenuBtn = new ReturnToMainMenuBtn(this);
+		_returnToMainMenuBtn.setPreferredSize(new Dimension(230, 25));
+		this.add(_returnToMainMenuBtn, BorderLayout.SOUTH);
+	}
+	
+	public static void clearStatistics(){
+		FileManager.clearStatisticFiles();
 	}
 
 	/**
@@ -70,6 +78,7 @@ public class ViewHistoryStatistics extends JPanel {
 		HashSet<String> wordsToDisplay = new HashSet<String>();
 
 			_fileReader.readFileByLineIntoSet(FileManager.STATS_MASTERED, wordsToDisplay);
+			_fileReader.readFileByLineIntoSet(FileManager.STATS_FAULTED, wordsToDisplay);
 			_fileReader.readFileByLineIntoSet(FileManager.STATS_FAILED, wordsToDisplay);
 
 		_sortedWordsToDisplay = new ArrayList<String>(wordsToDisplay);
@@ -115,7 +124,7 @@ public class ViewHistoryStatistics extends JPanel {
 	 * Shows the statistic table
 	 */
 	private void showTable() {
-		_statTable.setPreferredScrollableViewportSize(new Dimension(260,180));
+		_statTable.setPreferredScrollableViewportSize(new Dimension(260,370));
 		_statTable.setFillsViewportHeight(true);
 		_tableScroll.setViewportView(_statTable);
 		this.repaint(); // repaints all components so that the scroll pane adjusts to the new table size

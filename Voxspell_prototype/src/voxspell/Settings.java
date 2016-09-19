@@ -24,7 +24,7 @@ public class Settings extends JPanel {
 	private JComboBox<String> _ttsVoiceComboBox;
 
 	// Fontsize combobox
-	private static final String[] _fontSizes = { "10" , "12" , "14" , "16" , "18" };
+	private static final String[] _fontSizes = { "10" , "12" , "14" };
 	private JComboBox<String> _fontSizeComboBox;
 
 	// this class is a singleton
@@ -57,8 +57,8 @@ public class Settings extends JPanel {
 		JLabel fontSizeText = new JLabel("Font Size:" );
 		this.add(fontSizeText);
 		_fontSizeComboBox = new JComboBox<String>(_fontSizes);
-
 		this.add(_fontSizeComboBox);
+		_fontSizeComboBox.setSelectedItem(_fontSizes[1]);
 
 		/* Event handlers for Settings */
 		voiceDropDownEventHandler();
