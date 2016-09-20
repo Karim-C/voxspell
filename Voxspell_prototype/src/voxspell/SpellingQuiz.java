@@ -28,7 +28,7 @@ public class SpellingQuiz extends JPanel {
 	private ReturnToMainMenuBtn _returnToMainMenuBtn;
 
 	// game logic
-	private static final int NUM_OF_LEVELS = 10;
+	private static final int NUM_OF_LEVELS = 11;
 	private int _level;
 	private static String[] _levels;
 	private ArrayList<String> _wordList;
@@ -173,7 +173,7 @@ public class SpellingQuiz extends JPanel {
 				/* User has failed the quiz */
 				finishedQuizOptionPane.failedLevelOptionPane();
 			} else {
-				if (_level == 10) {
+				if (_level == 11) {
 					/* User has passed level 10 */
 					finishedQuizOptionPane.passedGameOptionPane();
 				} else {
@@ -249,11 +249,14 @@ public class SpellingQuiz extends JPanel {
 	
 	public void playFinalRewardVideo() {
 		// use FFMPEG to make a different reward video for the final level.
-		// TODO
+		VideoPlayer videoPlayer = new VideoPlayer(this, true);
+		videoPlayer.playVideoThenGoToNextSpellingQuizLevel();
+
 	}
 
 	private void playVideoAndGoToNextSpellingQuizLevel() {
-		VideoPlayer videoPlayer = new VideoPlayer(this);
+		
+		VideoPlayer videoPlayer = new VideoPlayer(this, false);
 		videoPlayer.playVideoThenGoToNextSpellingQuizLevel();
 	}
 
