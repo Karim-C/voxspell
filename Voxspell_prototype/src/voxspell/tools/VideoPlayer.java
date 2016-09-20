@@ -33,7 +33,7 @@ import voxspell.SpellingQuiz;
 @SuppressWarnings("serial")
 public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	
-	private static final String videoFileName = "big_buck_bunny_1_minute.avi";
+	private static String _videoFileName = "big_buck_bunny_1_minute.avi";
 	private JFrame _videoFrame;
 	private SpellingQuiz _spellingQuiz;
 	
@@ -41,8 +41,16 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	private boolean _pausePressed = false;
 	private boolean _mutePressed = false;
 	
-	public VideoPlayer(SpellingQuiz spellingQuiz){
+	public VideoPlayer(SpellingQuiz spellingQuiz, boolean special){
 		_spellingQuiz = spellingQuiz;
+		
+		if (special) {
+			SpecialRewardMaker spm = new SpecialRewardMaker();
+			spm.execute();
+			_videoFileName = "speacialReward.avi";
+		}
+	
+		
 	}
 	
 	public void playVideoThenGoToNextSpellingQuizLevel(){
@@ -57,6 +65,7 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 				execute();
 			}
 		});
+		
 	}
 	
 	private void execute(){
@@ -105,25 +114,27 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 				}
 		});
 		
-		// Allows the user to go forwards 5 seconds
-		JButton btnSkip = new JButton("Forward");
-		buttonPanel.add(btnSkip);
-		btnSkip.addActionListener((ActionEvent) ->  {
-				video.skip(5000);
-		});
-		
 		// Allows the user to go back 5 seconds
 		JButton btnBackSkip = new JButton("Back");
 		buttonPanel.add(btnBackSkip);
 		btnBackSkip.addActionListener((ActionEvent) ->  {
 				video.skip(-5000);
 		});
+		
+		// Allows the user to go forwards 5 seconds
+		JButton btnSkip = new JButton("Forward");
+		buttonPanel.add(btnSkip);
+		btnSkip.addActionListener((ActionEvent) ->  {
+				video.skip(5000);
+		});
 
 		_videoFrame.setLocation(100, 100);
 		_videoFrame.setSize(1050, 600);
 		_videoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // SO entire program doesn't close!
 		_videoFrame.setVisible(true);		
-		video.playMedia(videoFileName);
+		video.playMedia(_videoFileName);
+		
+		
 		
 		_videoFrame.addWindowListener(new WindowAdapter(){
 			@Override
