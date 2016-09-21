@@ -19,7 +19,7 @@ import voxspell.tools.CaseInsensitiveComparator;
 import voxspell.tools.CustomFileReader;
 
 @SuppressWarnings("serial")
-public class ViewHistoryStatistics extends JPanel {
+public class HistoryStatistics extends JPanel {
 
 	// Datatypes to hold words
 	private List<String> _sortedWordsToDisplay;
@@ -35,14 +35,14 @@ public class ViewHistoryStatistics extends JPanel {
 	/**
 	 * Creates the base JPanel for ViewStats
 	 */
-	public ViewHistoryStatistics(){
+	public HistoryStatistics(){
 		this.setBorder(BorderFactory.createTitledBorder("History Statistics"));
 		
 		this.setPreferredSize(new Dimension(300,250));
 		getTableAndScrollPaneInstance();
 		
 		_returnToMainMenuBtn = new ReturnToMainMenuBtn(this);
-		_returnToMainMenuBtn.setPreferredSize(new Dimension(230, 25));
+		_returnToMainMenuBtn.setPreferredSize(new Dimension(260, 25));
 		this.add(_returnToMainMenuBtn, BorderLayout.SOUTH);
 	}
 	

@@ -32,7 +32,7 @@ public class Voxspell extends JPanel {
 	private JPanel _mainMenuPanel;
 	private static JPanel _cardLayoutPanel;
 	private SpellingQuiz _spellingQuiz;
-	private ViewHistoryStatistics _viewStatistics = new ViewHistoryStatistics();
+	private HistoryStatistics _viewStatistics = new HistoryStatistics();
 	
 	// Other Panels next to the card layout - Statistics and Settings
 	private SessionStatistics _sessionStatistics;
@@ -76,10 +76,10 @@ public class Voxspell extends JPanel {
 		_sidePanel.setLayout(new BorderLayout());
 		
 		_sessionStatistics = SessionStatistics.getInstance();
-		_sessionStatistics.setPreferredSize(new Dimension(300,300));
+		_sessionStatistics.setPreferredSize(new Dimension(300,350));
 		
 		_settings = Settings.getInstance(this);
-		_settings.setPreferredSize(new Dimension(300,150));
+		_settings.setPreferredSize(new Dimension(300,100));
 		
 		_sidePanel.add(_sessionStatistics, BorderLayout.NORTH);
 		_sidePanel.add(_settings, BorderLayout.SOUTH);
@@ -122,7 +122,7 @@ public class Voxspell extends JPanel {
 			CustomOptionPane customOptionPane = new CustomOptionPane(this);
 			if (customOptionPane.yesNoDialog("Clear statistics, are you sure?", "Clearing statistics")){
 				_sessionStatistics.clearStats();
-				ViewHistoryStatistics.clearStatistics();
+				HistoryStatistics.clearStatistics();
 			}
 		});
 	}

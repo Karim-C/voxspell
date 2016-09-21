@@ -2,9 +2,8 @@ package voxspell;
 
 /** 
  * This class contains fields which record Session statistics and methods which record and display the Statistics.
- */
-/*
- * The following class was based on code written by Will Molloy.
+ * 
+ * @author Karim Cisse and Will Molloy
  */
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -15,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -25,7 +25,9 @@ public class SessionStatistics extends JPanel {
 												// successes,
 												// element 2: attempts
 
-	private static final Dimension TABLE_DIMENSION = new Dimension(260, 230);
+	private static final Dimension TABLE_DIMENSION = new Dimension(260, 250);
+	
+	private JTabbedPane _tableTabPane = new JTabbedPane();
 
 	private JScrollPane _tableScroll;
 	private JTable _statTable;
@@ -107,7 +109,8 @@ public class SessionStatistics extends JPanel {
 	private void getTableAndScrollPaneInstance() {
 		if (_tableScroll == null) {
 			_tableScroll = new JScrollPane();
-			this.add(_tableScroll, BorderLayout.NORTH);
+			_tableTabPane.add(_tableScroll);
+			this.add(_tableTabPane, BorderLayout.NORTH);
 		}
 	}
 
