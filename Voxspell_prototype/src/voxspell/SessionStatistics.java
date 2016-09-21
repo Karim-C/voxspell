@@ -8,6 +8,7 @@ package voxspell;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -21,16 +22,20 @@ import javax.swing.table.TableModel;
 
 @SuppressWarnings("serial")
 public class SessionStatistics extends JPanel {
-	private ArrayList<String[]> currentStats; // element 0: word, element 1:
-												// successes,
-												// element 2: attempts
-
-	private static final Dimension TABLE_DIMENSION = new Dimension(260, 250);
 	
-	private JTabbedPane _tableTabPane = new JTabbedPane();
+	/*
+	 * List of stats. Contains an ArrayList of Strings for each levels stats.
+	 * In the String[] arrays the elements work as follows: 
+	 * element 0: word, element 1: successes, element 2: attempts
+	 */
+	private List<ArrayList<String[]>> currentStats;   
 
-	private JScrollPane _tableScroll;
-	private JTable _statTable;
+	private static final Dimension TABLE_DIMENSION = new Dimension(260, 240);
+	private static final int NUM_LEVELS = SpellingQuiz.NUM_OF_LEVELS;
+
+	private JTabbedPane _tableTabPane = new JTabbedPane();
+	private List<JScrollPane> _tableScrolls = new ArrayList<JScrollPane>();
+	private List<JTable> _statTables = new ArrayList<JTable>(Collections.nCopies(NUM_LEVELS, new JTable()));
 	private static SessionStatistics instance;
 	private JLabel _wordCountOutputArea;
 
@@ -41,62 +46,86 @@ public class SessionStatistics extends JPanel {
 		}
 		return instance;
 	}
+	
+	/**
+	 * Shows the stats table for the given level.
+	 */
+	public void setLevelShownForTable(int level){
+		_tableTabPane.setSelectedIndex(level-1);
+	}
 
 	/**
-	 * Creates the base JPanel for ViewStats
+	 * Creates the base JPanel for SessionStats
 	 * 
 	 * @author Will Molloy
 	 */
 	private SessionStatistics() {
-		currentStats = new ArrayList<String[]>();
 		this.setBorder(BorderFactory.createTitledBorder("Session Statistics"));
 
 		_wordCountOutputArea = new JLabel();
 		_wordCountOutputArea.setText("Current Quiz) Correct: 0 Attempted: 0");
-		
+
 		this.add(_wordCountOutputArea, BorderLayout.NORTH);
-		getTableAndScrollPaneInstance();
+		getTableAndScrollPaneInstance(); // initialises the empty List of JScrollPanes and adds JTables to them
+		clearStats(); // initialises the empty List of statistics and List of JTables
 	}
 
 	/**
 	 * This method takes a word (string) and whether it was spelled correctly
 	 * (boolean) and then adds the information to the currentStats ArrayList
 	 * 
-	 * @author Karim Cisse
+	 * @author Karim Cisse and Will Molloy
 	 */
-	public void addToStats(String word, boolean spelledCorrectly) {
+	public void addToStats(String word, boolean spelledCorrectly, int level) {
 
-		int index = wordAlreadyAttemptThisSession(word);
-		int success = 0;
-
+		int index = wordAlreadyAttemptThisSession(word, level);
+		
 		// the success variable uses a binary representation for true and false,
 		// 1 and 0 respectively
-		if (spelledCorrectly) {
-			success = 1;
-		}
+		int success = spelledCorrectly? 1 : 0;
 
+		/*
+		 * Need to get the ListOfStats for the current level. (A List of Strings)
+		 * Must recreate the object so that there is no reference to the old object.
+		 * (Simply using .get() causes the stats for every level to be updated).
+		 */
+		ArrayList<String[]> listOfStats = new ArrayList<String[]>(currentStats.get(level-1));
+		
 		// -1 Indicates the word has not been attempted this session
 		if (index == -1) {
 			String[] stats = new String[] { word, success + "", "1" };
-			currentStats.add(stats);
+			listOfStats.add(stats);
 		} else {
-			String[] stats = currentStats.get(index);
+			String[] stats = listOfStats.get(index);
 			String successes = "" + (Integer.parseInt(stats[1]) + success);
 			String Attempts = "" + (Integer.parseInt(stats[2]) + 1);
-			currentStats.remove(index); // the old statistics are removed and
-										// the the
-										// new are added to update the ArrayList
-			currentStats.add(index, new String[] { word, successes, Attempts });
+			
+			/*
+			 * the old statistics are removed and the 
+			 * new are added to update the ArrayList
+			 */
+			listOfStats.remove(index); // 
+			listOfStats.add(new String[] { word, successes, Attempts });
 		}
+		// Finally update the overall stats 
+		currentStats.set(level-1, listOfStats);
 	}
 
 	/**
 	 * This method clears the current statistics
-	 * 
 	 */
 	public void clearStats() {
-		currentStats = new ArrayList<String[]>();
-		generateAndShowTable();
+		currentStats = new ArrayList<ArrayList<String[]>>(Collections.nCopies(NUM_LEVELS, new ArrayList<String[]>()));
+		generateAndShowTables();
+	}
+
+	/**
+	 * Creates and shows the table for every level.
+	 */
+	private void generateAndShowTables() {
+		for (int i = 1; i <= NUM_LEVELS; i++){
+			generateAndShowTableForLevel(i);
+		}
 	}
 
 	/**
@@ -107,24 +136,34 @@ public class SessionStatistics extends JPanel {
 	 * @author Will Molloy
 	 */
 	private void getTableAndScrollPaneInstance() {
-		if (_tableScroll == null) {
-			_tableScroll = new JScrollPane();
-			_tableTabPane.add(_tableScroll);
-			this.add(_tableTabPane, BorderLayout.NORTH);
+		for (int i = 0; i < NUM_LEVELS; i++){
+			JScrollPane scrollPane = new JScrollPane();
+			JLabel label = new JLabel("" +(i+1)); 		// (i+1), the level of stats being shown on the table
+			label.setPreferredSize(new Dimension(20,10));
+			
+			_tableScrolls.add(scrollPane);				// add scrollPane to JScrollPane List
+			_tableTabPane.add(scrollPane);				// add scrollPane to tabbed pane
+			_tableTabPane.setTabComponentAt(i, label); 	// the label shown on the tabbed pane
 		}
+		this.add(_tableTabPane, BorderLayout.NORTH);
 	}
 
 	/**
 	 * Generates the statistics table based on what is in the sorted list
 	 * 'sortedWordsToDisplay' and is in the hidden statistic files.
 	 * 
-	 * Found code here: http://stackoverflow.com/a/11095952/6122976
+	 * Found the code for using DefaultTableModel here: http://stackoverflow.com/a/11095952/6122976
+	 * 
+	 * @author Will Molloy and Karim Cisse
 	 */
-	public void generateAndShowTable() {
+	public void generateAndShowTableForLevel(int level) {
 		String[] columnNames = { "Word", "Accuraccy", "Attempts" };
 		List<String[]> stats = new ArrayList<String[]>();
 
-		for (String[] wordStats : currentStats) {
+		/*
+		 * Level-1 is the position of the table/stats for the level in the List
+		 */
+		for (String[] wordStats : currentStats.get(level-1)) { 
 			stats.add(new String[] { wordStats[0], calcAccurracy(wordStats), wordStats[2] });
 		}
 
@@ -135,20 +174,31 @@ public class SessionStatistics extends JPanel {
 				return false;
 			}
 		};
-		_statTable = new JTable(tableModel);
-		showTable();
-
+		
+		// Update the table in the correct position in the list of tables.
+		JTable table = new JTable(tableModel);
+		_statTables.set(level-1, table);
+		
+		showTables();
 	}
 
 	/**
-	 * Shows the statistic table
+	 * Shows the statistic tables
+	 * 
+	 * @author Will Molloy
 	 */
-	private void showTable() {
-		_statTable.setPreferredScrollableViewportSize(TABLE_DIMENSION);
-		_statTable.setFillsViewportHeight(true);
-		_tableScroll.setViewportView(_statTable);
-		this.repaint(); // repaints all components so that the scroll pane
-						// adjusts to the new table size
+	private void showTables() {
+		for (int i = 0; i < NUM_LEVELS; i++){
+			_statTables.get(i).setPreferredScrollableViewportSize(TABLE_DIMENSION);
+			_statTables.get(i).setFillsViewportHeight(true);
+			_tableScrolls.get(i).setViewportView(_statTables.get(i));
+			
+			/*
+			 * repaints all components so that the scroll pane
+			 * adjusts to the new table size
+			 */
+			this.repaint();  
+		}
 	}
 
 	/**
@@ -170,9 +220,9 @@ public class SessionStatistics extends JPanel {
 	 * 
 	 * @author Karim Cisse
 	 */
-	private int wordAlreadyAttemptThisSession(String word) {
+	private int wordAlreadyAttemptThisSession(String word, int level) {
 		int index = 0;
-		for (String[] stats : currentStats) {
+		for (String[] stats : currentStats.get(level-1)) {
 			if (stats[0].equals(word)) {
 				return index;
 			}

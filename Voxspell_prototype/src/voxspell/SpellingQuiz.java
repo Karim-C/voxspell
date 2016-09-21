@@ -17,6 +17,12 @@ import voxspell.tools.CustomFileReader;
 import voxspell.tools.TextToSpeech;
 import voxspell.tools.VideoPlayer;
 
+/**
+ * Represents a Spelling Quiz game.
+ * 
+ * @author Karim Cisse
+ * @author Will Molloy
+ */
 @SuppressWarnings("serial")
 public class SpellingQuiz extends JPanel {
 
@@ -28,13 +34,14 @@ public class SpellingQuiz extends JPanel {
 	private ReturnToMainMenuBtn _returnToMainMenuBtn;
 
 	// game logic
-	private static final int NUM_OF_LEVELS = 11;
-	private int _level;
+	protected static final int NUM_OF_LEVELS = 11;
+	private int _level = -1;
 	private static String[] _levels;
 	private ArrayList<String> _wordList;
 	private boolean _firstAttempt = true;
 	private int _wordsCorrectFirstAttempt;
 	private int _wordsAttempt;
+	SessionStatistics _stats = SessionStatistics.getInstance();
 
 	// tools
 	private CustomFileReader _fileReader = new CustomFileReader();
@@ -111,9 +118,12 @@ public class SpellingQuiz extends JPanel {
 	 * New quiz: Ask user for level, ask for first word in quiz.
 	 */
 	public void newQuiz() {
-		this.setBorder(BorderFactory.createTitledBorder("Level 1")); // default level 1 - if they press cancel will go to level
+		this.setBorder(BorderFactory.createTitledBorder("Level ?")); 
 		promptUserForInitialLevel();
-		resetFieldsReadWordsFromFileAndBeginQuiz();
+		if (_level != -1){
+			resetFieldsReadWordsFromFileAndBeginQuiz();
+			_stats.setLevelShownForTable(_level);
+		}
 	}
 
 	private void promptUserForInitialLevel() {
@@ -123,7 +133,7 @@ public class SpellingQuiz extends JPanel {
 		try {
 			_level = Integer.parseInt(whatLevel);
 		} catch (NumberFormatException e) {
-			_level = 1; // if user pressed cancel
+			Voxspell.showMainMenu(); // user pressed cancel, go back to main menu?
 		}
 	}
 
@@ -187,13 +197,13 @@ public class SpellingQuiz extends JPanel {
 	private void checkInputWord() {
 		if (_wordList.size() > 0) {
 			String word = _wordList.get(0);
-			SessionStatistics stats = SessionStatistics.getInstance();
+			
 
 			if (_wordEntryField.getText().equals(_wordList.get(0))) {
 				_textToSpeech.readSentenceAndContinueSpellingQuiz("Correct", this);
 				_programOutputArea.append(_wordEntryField.getText() + "\n");
 
-				stats.addToStats(_wordList.get(0), true); // the word is recorded in the statistics
+				_stats.addToStats(_wordList.get(0), true, _level); // the word is recorded in the statistics
 
 				_wordList.remove(0);// the word is removed from the list when it is correctly spelled
 
@@ -205,11 +215,11 @@ public class SpellingQuiz extends JPanel {
 					_wordsCorrectFirstAttempt++;
 				}
 				_wordsAttempt++;
-				stats.generateAndShowTable();
+				_stats.generateAndShowTableForLevel(_level);
 
 			} else {
 
-				stats.addToStats(_wordList.get(0), false);
+				_stats.addToStats(_wordList.get(0), false, _level);
 				_textToSpeech.readSentenceAndContinueSpellingQuiz("Incorrect", this);
 				_programOutputArea.append(_wordEntryField.getText() + "\n");
 
@@ -220,12 +230,12 @@ public class SpellingQuiz extends JPanel {
 					_fileReader.appendWordToFile(word, FileManager.STATS_FAILED);
 					_wordList.remove(0); // the word is removed from the list after it is seen twice
 					_firstAttempt = true;
-					stats.generateAndShowTable();// resets so the next attempts can be tracked
+					_stats.generateAndShowTableForLevel(_level);// resets so the next attempts can be tracked
 					_wordsAttempt++;
 				}
 
 			}
-			stats.displayWordCount(_wordsCorrectFirstAttempt, _wordsAttempt);
+			_stats.displayWordCount(_wordsCorrectFirstAttempt, _wordsAttempt);
 
 			_wordEntryField.setText(""); // clears the entry field
 		}
@@ -251,7 +261,6 @@ public class SpellingQuiz extends JPanel {
 		// use FFMPEG to make a different reward video for the final level.
 		VideoPlayer videoPlayer = new VideoPlayer(this, true);
 		videoPlayer.playVideoThenGoToNextSpellingQuizLevel();
-
 	}
 
 	private void playVideoAndGoToNextSpellingQuizLevel() {
