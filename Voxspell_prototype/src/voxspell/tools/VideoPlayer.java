@@ -45,8 +45,6 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 		_spellingQuiz = spellingQuiz;
 		
 		if (special) {
-			SpecialRewardMaker spm = new SpecialRewardMaker();
-			spm.execute();
 			_videoFileName = "speacialReward.avi";
 		}
 	

@@ -14,6 +14,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import voxspell.tools.CustomFileReader;
+import voxspell.tools.SpecialRewardMaker;
 import voxspell.tools.TextToSpeech;
 import voxspell.tools.VideoPlayer;
 
@@ -147,6 +148,9 @@ public class SpellingQuiz extends JPanel {
 		// displays the words correct and attempted as 0
 		SessionStatistics stats = SessionStatistics.getInstance();
 		stats.displayWordCount(_wordsCorrectFirstAttempt, _wordsAttempt);
+		
+		// creates the final reward video
+		createFinalRewardVideo();
 
 		readWordsFromFile();
 		continueSpellingQuiz();
@@ -261,6 +265,12 @@ public class SpellingQuiz extends JPanel {
 		// use FFMPEG to make a different reward video for the final level.
 		VideoPlayer videoPlayer = new VideoPlayer(this, true);
 		videoPlayer.playVideoThenGoToNextSpellingQuizLevel();
+	}
+	
+	// creates the final reward video
+	private void createFinalRewardVideo() {
+		SpecialRewardMaker spm = new SpecialRewardMaker();
+		spm.execute();
 	}
 
 	private void playVideoAndGoToNextSpellingQuizLevel() {
