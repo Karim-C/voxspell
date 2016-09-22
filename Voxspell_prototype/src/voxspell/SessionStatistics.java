@@ -1,9 +1,11 @@
 package voxspell;
 
 /** 
- * This class contains fields which record Session statistics and methods which record and display the Statistics.
+ * This class contains fields which record Session statistics and methods which record 
+ * and display the Statistics.
  * 
- * @author Karim Cisse and Will Molloy
+ * @author Karim Cisse
+ * @author Will Molloy
  */
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -74,7 +76,8 @@ public class SessionStatistics extends JPanel {
 	 * This method takes a word (string) and whether it was spelled correctly
 	 * (boolean) and then adds the information to the currentStats ArrayList
 	 * 
-	 * @author Karim Cisse and Will Molloy
+	 * @author Karim Cisse - implemented method.
+	 * @author Will Molloy - added support for specifying the level the word is from.
 	 */
 	public void addToStats(String word, boolean spelledCorrectly, int level) {
 
@@ -104,7 +107,7 @@ public class SessionStatistics extends JPanel {
 			 * the old statistics are removed and the 
 			 * new are added to update the ArrayList
 			 */
-			listOfStats.remove(index); // 
+			listOfStats.remove(index);  
 			listOfStats.add(new String[] { word, successes, Attempts });
 		}
 		// Finally update the overall stats 
@@ -113,6 +116,9 @@ public class SessionStatistics extends JPanel {
 
 	/**
 	 * This method clears the current statistics
+	 * 
+	 * @author Karim Cisse - implemented method using list of strings 
+	 * @author Will Molloy - changed to clear a list of list of strings 
 	 */
 	public void clearStats() {
 		currentStats = new ArrayList<ArrayList<String[]>>(Collections.nCopies(NUM_LEVELS, new ArrayList<String[]>()));
@@ -121,6 +127,8 @@ public class SessionStatistics extends JPanel {
 
 	/**
 	 * Creates and shows the table for every level.
+	 * 
+	 * @author Will Molloy
 	 */
 	private void generateAndShowTables() {
 		for (int i = 1; i <= NUM_LEVELS; i++){
@@ -129,9 +137,8 @@ public class SessionStatistics extends JPanel {
 	}
 
 	/**
-	 * Adds empty scroll pane to this JPanel which will later hold the statistic
-	 * table. Only initialised once so that statTable can be updated at run
-	 * time.
+	 * Creates the JScrollPanes that will hold the JTables and adds the ScrollPanes
+	 * to a tabbed pane. Then adds the tabbed pane to this JPanel.
 	 * 
 	 * @author Will Molloy
 	 */
@@ -154,10 +161,11 @@ public class SessionStatistics extends JPanel {
 	 * 
 	 * Found the code for using DefaultTableModel here: http://stackoverflow.com/a/11095952/6122976
 	 * 
-	 * @author Will Molloy and Karim Cisse
+	 * @author Karim Cisse - statistics retrieval / placing stats into array.
+	 * @author Will Molloy - code for creating a JTable using the array.
 	 */
 	public void generateAndShowTableForLevel(int level) {
-		String[] columnNames = { "Word", "Accuraccy", "Attempts" };
+		String[] columnNames = { "Word", "Accuracy", "Attempts" };
 		List<String[]> stats = new ArrayList<String[]>();
 
 		/*

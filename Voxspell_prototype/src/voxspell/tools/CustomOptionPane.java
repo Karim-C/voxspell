@@ -5,8 +5,8 @@ import javax.swing.JPanel;
 
 /**
  * Represents an easier way to create JOptionPanes with a few options. 
- * @author will
- *
+ * 
+ * @author Will Molloy
  */
 @SuppressWarnings("serial")
 public class CustomOptionPane extends JOptionPane {
@@ -29,6 +29,10 @@ public class CustomOptionPane extends JOptionPane {
 		return false;
 	}
 	
+	/**
+	 * Creates an option dialog using a String[] of options.
+	 * Returns an int of the index the user selected from that string[] of options.
+	 */
 	public int optionDialog(String msg, String title, String[] options, String initialOption){
 		int selection = JOptionPane.showOptionDialog(
 				this, msg, title, JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, initialOption);

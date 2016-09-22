@@ -5,7 +5,7 @@ import voxspell.tools.CustomOptionPane;
 /**
  * Contains methods for a set of option panes displayed at the end of a Spelling Quiz.
  * 
- * @author will
+ * @author Will Molloy
  */
 public class FinishedQuizOptionPane {
 
@@ -75,7 +75,7 @@ public class FinishedQuizOptionPane {
 	}
 
 	/**
-	 * When the user completes the overall spelling quiz (i.e. the 10th level). They will have the option
+	 * When the user completes the overall spelling quiz (i.e. the 11th level). They will have the option
 	 * to play the final reward video, restart at a certain level OR return to the main menu.
 	 */
 	public void passedGameOptionPane() {

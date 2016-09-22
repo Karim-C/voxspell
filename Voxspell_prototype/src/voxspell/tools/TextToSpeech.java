@@ -40,7 +40,6 @@ public class TextToSpeech {
 
 	/**
 	 * Reads a sentence and continues the spelling quiz once done.
-	 * 						Redesign - too much coupling?
 	 */
 	public void readSentenceAndContinueSpellingQuiz(String sentence, SpellingQuiz spellingQuiz) {
 		_continueSpellingQuiz = true;
@@ -129,7 +128,6 @@ public class TextToSpeech {
 		
 		/**
 		 * Continues the spelling quiz if specified.
-		 * (not very OO)
 		 */
 		@Override
 		public void done(){

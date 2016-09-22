@@ -13,6 +13,11 @@ import javax.swing.plaf.FontUIResource;
 
 import voxspell.tools.TextToSpeech;
 
+/**
+ * Contains JComboBox components to change a few settings for the Voxspell program.
+ * 
+ * @author Will Molloy
+ */
 @SuppressWarnings("serial")
 public class Settings extends JPanel {
 
@@ -61,11 +66,11 @@ public class Settings extends JPanel {
 		_fontSizeComboBox.setSelectedItem(_fontSizes[1]);
 
 		/* Event handlers for Settings */
-		voiceDropDownEventHandler();
-		fontSizeEventHandler();
+		createVoiceDropDownEventHandler();
+		createFontSizeEventHandler();
 	}
 
-	private void voiceDropDownEventHandler() {
+	private void createVoiceDropDownEventHandler() {
 		_ttsVoiceComboBox.addActionListener( (ActionListener) -> {
 			String voice = (String) _ttsVoiceComboBox.getSelectedItem();
 			String voiceCommand = getFestivalVoiceCommand(voice);
@@ -84,7 +89,7 @@ public class Settings extends JPanel {
 		} 
 	}
 
-	private void fontSizeEventHandler(){
+	private void createFontSizeEventHandler(){
 		_fontSizeComboBox.addActionListener( (ActionListener) -> {
 			String item = (String) _fontSizeComboBox.getSelectedItem();
 			int fontSize = Integer.parseInt(item);
@@ -96,10 +101,11 @@ public class Settings extends JPanel {
 	 * Sets font size of the voxspell instance.
 	 * Using code from http://stackoverflow.com/a/2989344
 	 */
-	public void setFontSize(int fontSize){
+	private void setFontSize(int fontSize){
 		FontUIResource f = new FontUIResource(new Font("Arial", 0, fontSize));
 		Enumeration<Object> keys = UIManager.getLookAndFeelDefaults().keys();
 
+		// Placing keys (components?) into the UIManager
 		while (keys.hasMoreElements()) {
 			Object key = keys.nextElement();
 			Object value = UIManager.get(key);
@@ -109,6 +115,7 @@ public class Settings extends JPanel {
 				UIManager.put(key, new FontUIResource(font));
 			}
 		}
+		// Update component tree recursively
 		SwingUtilities.updateComponentTreeUI(_voxspellInstance);
 	}
 

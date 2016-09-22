@@ -18,6 +18,16 @@ import javax.swing.table.TableModel;
 import voxspell.tools.CaseInsensitiveComparator;
 import voxspell.tools.CustomFileReader;
 
+/**
+ * History Statistics panel, shown when the user clicks 'View Statistics' from the main menu.
+ * Shows the entire history of the Voxspell program using the hidden files to store
+ * mastered,faulted and failed words. These statistics will be cleared when clicking the clear
+ * statistics button on the main menu.
+ * 
+ * Most of this code is copied from assignment 2.
+ * 
+ * @author Will Molloy
+ */
 @SuppressWarnings("serial")
 public class HistoryStatistics extends JPanel {
 

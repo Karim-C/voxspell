@@ -5,12 +5,10 @@ import javax.swing.JPanel;
 
 import voxspell.tools.CustomOptionPane;
 
-
-
 /**
- * Represents a JButton allowing the user to return to the main menu.
+ * Represents a JButton allowing the user to return to the main menu of Voxspell.
  * 
- * @author will
+ * @author Will Molloy
  */
 @SuppressWarnings("serial")
 public class ReturnToMainMenuBtn extends JButton {

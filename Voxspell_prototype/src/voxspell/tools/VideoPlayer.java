@@ -26,9 +26,10 @@ import voxspell.SpellingQuiz;
  * Linked to the voxspell.SpellingQuiz class.
  * 
  * Has a method to play the reward level and progress to the next level.
- * And a method to play the final reward video after finishing the final level in the SpellingQuiz class. (todo)
+ * And a method to play the final reward video after finishing the final level in the SpellingQuiz class. 
  * 
- * @author will
+ * @author Will Molloy
+ * @author Karim Cisse
  */
 @SuppressWarnings("serial")
 public class VideoPlayer extends EmbeddedMediaPlayerComponent {
@@ -41,16 +42,26 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	private boolean _pausePressed = false;
 	private boolean _mutePressed = false;
 	
+	/**
+	 * Creates video player object. Must supply a spellingQuiz instance to use certain methods.
+	 * 
+	 * @author Will Molloy - implemented constructor.
+	 * @author Karim Cisse - added support for a 'special' video.
+	 */
 	public VideoPlayer(SpellingQuiz spellingQuiz, boolean special){
 		_spellingQuiz = spellingQuiz;
 		
 		if (special) {
 			_videoFileName = "speacialReward.avi";
 		}
-	
-		
 	}
 	
+	/**
+	 * Plays the reward video and 
+	 * then goes to the next spelling quiz in the spelling quiz instance provided.
+	 * 
+	 * @author Will Molloy
+	 */
 	public void playVideoThenGoToNextSpellingQuizLevel(){
 		NativeLibrary.addSearchPath(
 				RuntimeUtil.getLibVlcLibraryName(), "/Applications/vlc-2.0.0/VLC.app/Contents/MacOS/lib"
@@ -66,6 +77,12 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 		
 	}
 	
+	/**
+	 * Executes the VLC video player into a JFrame
+	 * 
+	 * @author Will Molloy - implemented method
+	 * @author Karim Cisse - added support for pausing/muting/skipping video.
+	 */
 	private void execute(){
 		
 		_videoFrame = new JFrame("Reward Video");
@@ -143,6 +160,10 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 		});
 	}
 	
+	/**
+	 * Changed to dispose the video after finishing (so spelling quiz doesn't start behind the
+	 * video player JFrame).
+	 */
 	@Override
 	public void finished(MediaPlayer mediaPlayer){
 		_videoFrame.dispose(); // closes only the JFrame with the video, not entire voxspell program

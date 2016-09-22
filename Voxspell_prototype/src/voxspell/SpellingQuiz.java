@@ -21,8 +21,8 @@ import voxspell.tools.VideoPlayer;
 /**
  * Represents a Spelling Quiz game.
  * 
- * @author Karim Cisse
- * @author Will Molloy
+ * @author Karim Cisse - game logic/use of tools etc
+ * @author Will Molloy - base GUI taken from assignment 2
  */
 @SuppressWarnings("serial")
 public class SpellingQuiz extends JPanel {
@@ -42,7 +42,7 @@ public class SpellingQuiz extends JPanel {
 	private boolean _firstAttempt = true;
 	private int _wordsCorrectFirstAttempt;
 	private int _wordsAttempt;
-	SessionStatistics _stats = SessionStatistics.getInstance();
+	private SessionStatistics _stats = SessionStatistics.getInstance();
 
 	// tools
 	private CustomFileReader _fileReader = new CustomFileReader();
@@ -261,8 +261,10 @@ public class SpellingQuiz extends JPanel {
 		playVideoAndGoToNextSpellingQuizLevel();
 	}
 	
+	/**
+	 * use FFMPEG to make a different reward video for the final level.
+	 */
 	public void playFinalRewardVideo() {
-		// use FFMPEG to make a different reward video for the final level.
 		VideoPlayer videoPlayer = new VideoPlayer(this, true);
 		videoPlayer.playVideoThenGoToNextSpellingQuizLevel();
 	}
@@ -274,7 +276,6 @@ public class SpellingQuiz extends JPanel {
 	}
 
 	private void playVideoAndGoToNextSpellingQuizLevel() {
-		
 		VideoPlayer videoPlayer = new VideoPlayer(this, false);
 		videoPlayer.playVideoThenGoToNextSpellingQuizLevel();
 	}

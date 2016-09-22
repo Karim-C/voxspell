@@ -12,8 +12,19 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
+/**
+ * Contains a few methods to read files for statistics/words from the wordlist.
+ * 
+ * @author Karim Cisse
+ * @author Will Molloy
+ */
 public class CustomFileReader {
 
+	/**
+	 * Reads a set of 10 words from the wordlist file based on the level provided.
+	 * 
+	 * @author Karim Cisse
+	 */
 	public ArrayList<String> getWordList(int level) {
 		ArrayList<String> wordList = readInWords(level);
 
@@ -30,6 +41,10 @@ public class CustomFileReader {
 		return returnWords;
 	}
 
+	/**
+	 * Read words in from wordlist file.
+	 * @author Karim Cisse
+	 */
 	private ArrayList<String> readInWords(int level) {
 
 		ArrayList<String> wordList = new ArrayList<String>();
@@ -72,6 +87,8 @@ public class CustomFileReader {
 	
 	/** 
 	 * Appends a word to a file.
+	 * 
+	 * @author Will Molloy
 	 */
 	public void appendWordToFile(String word, File file){
 		BufferedWriter writer;
@@ -87,6 +104,8 @@ public class CustomFileReader {
 	
 	/**
 	 * Reads words line by line from a file into a HashSet.
+	 * 
+	 * @author Will Molloy
 	 */
 	public void readFileByLineIntoSet(File file, HashSet<String> words){
 		String word;
@@ -103,6 +122,8 @@ public class CustomFileReader {
 
 	/**
 	 * Gets a count of lines containing 'word' in 'file'
+	 * 
+	 * @author Will Molloy
 	 */
 	public int getWordCountFromFile(String word, File file) {
 		BufferedReader reader;

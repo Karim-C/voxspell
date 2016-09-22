@@ -17,10 +17,13 @@ import javax.swing.SwingUtilities;
 import voxspell.tools.CustomOptionPane;
 
 /**
- * Voxspell main.
+ * Voxspell main class, shows the main menu initially.
+ * Contains a cardlayout to switch between:
+ * the main menu/spelling quiz/view stats.
  * 
- * @author Will Molloy
- *
+ * Mostly taken from assignment 2 code.
+ * 
+ * @author Will Molloy 
  */
 @SuppressWarnings("serial")
 public class Voxspell extends JPanel {
