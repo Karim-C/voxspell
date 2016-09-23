@@ -28,6 +28,7 @@ import voxspell.SpellingQuiz;
  * Has a method to play the reward level and progress to the next level.
  * And a method to play the final reward video after finishing the final level in the SpellingQuiz class. 
  * 
+ * @author Nasser Giacaman - based on ACP code
  * @author Will Molloy
  * @author Karim Cisse
  */

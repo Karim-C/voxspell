@@ -166,7 +166,7 @@ public class SpellingQuiz extends JPanel {
 	public void continueSpellingQuiz() {
 
 		// when the wordList is empty the quiz is finished
-		if (_wordList.size() > 0) {
+		if (!(_wordList.size() > 0)) {
 
 			if (_firstAttempt) {
 				String line = "Please spell ... " + _wordList.get(0);
@@ -183,7 +183,7 @@ public class SpellingQuiz extends JPanel {
 			/* Quiz has completed */
 			FinishedQuizOptionPane finishedQuizOptionPane = new FinishedQuizOptionPane(_wordsCorrectFirstAttempt, this);
 			
-			if (_wordsCorrectFirstAttempt < 9) {
+			if (_wordsCorrectFirstAttempt < -1) {
 				/* User has failed the quiz */
 				finishedQuizOptionPane.failedLevelOptionPane();
 			} else {
