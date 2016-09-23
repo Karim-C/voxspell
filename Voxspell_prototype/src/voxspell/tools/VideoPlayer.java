@@ -38,6 +38,7 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	private static String _videoFileName = "big_buck_bunny_1_minute.avi";
 	private JFrame _videoFrame;
 	private SpellingQuiz _spellingQuiz;
+	private boolean _continueQuiz;
 	
 	// Button press logic
 	private boolean _pausePressed = false;
@@ -45,16 +46,9 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	
 	/**
 	 * Creates video player object. Must supply a spellingQuiz instance to use certain methods.
-	 * 
-	 * @author Will Molloy - implemented constructor.
-	 * @author Karim Cisse - added support for a 'special' video.
 	 */
-	public VideoPlayer(SpellingQuiz spellingQuiz, boolean special){
+	public VideoPlayer(SpellingQuiz spellingQuiz){
 		_spellingQuiz = spellingQuiz;
-		
-		if (special) {
-			_videoFileName = "speacialReward.avi";
-		}
 	}
 	
 	/**
@@ -64,6 +58,20 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	 * @author Will Molloy
 	 */
 	public void playVideoThenGoToNextSpellingQuizLevel(){
+		_continueQuiz = true;
+		playVideo();
+	}
+	
+	/**
+	 *  @author Karim Cisse - added support for a 'special' video.
+	 */
+	public void playFinalRewardVideo() {
+		_continueQuiz = false;
+		_videoFileName = "speacialReward.avi"; // 'bonus' video
+		playVideo();
+	}
+	
+	private void playVideo(){
 		NativeLibrary.addSearchPath(
 				RuntimeUtil.getLibVlcLibraryName(), "/Applications/vlc-2.0.0/VLC.app/Contents/MacOS/lib"
 				);
@@ -75,7 +83,6 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 				execute();
 			}
 		});
-		
 	}
 	
 	/**
@@ -156,7 +163,9 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 			@Override
 			public void windowClosing(WindowEvent e){
 				video.stop();
-				_spellingQuiz.nextLevel();
+				if (_continueQuiz){
+					_spellingQuiz.nextLevel();
+				}
 			}
 		});
 	}
@@ -168,9 +177,13 @@ public class VideoPlayer extends EmbeddedMediaPlayerComponent {
 	@Override
 	public void finished(MediaPlayer mediaPlayer){
 		_videoFrame.dispose(); // closes only the JFrame with the video, not entire voxspell program
-		_spellingQuiz.nextLevel();
+		if (_continueQuiz){
+			_spellingQuiz.nextLevel();
+		}
 		super.finished(mediaPlayer);
 	}
+
+	
 
 
 

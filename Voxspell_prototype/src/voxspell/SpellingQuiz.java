@@ -124,7 +124,7 @@ public class SpellingQuiz extends JPanel {
 		if (_level != -1){
 			resetFieldsReadWordsFromFileAndBeginQuiz();
 			_stats.setLevelShownForTable(_level);
-		}
+		} 
 	}
 
 	private void promptUserForInitialLevel() {
@@ -166,7 +166,7 @@ public class SpellingQuiz extends JPanel {
 	public void continueSpellingQuiz() {
 
 		// when the wordList is empty the quiz is finished
-		if (!(_wordList.size() > 0)) {
+		if (_wordList.size() > 0) {
 
 			if (_firstAttempt) {
 				String line = "Please spell ... " + _wordList.get(0);
@@ -183,7 +183,7 @@ public class SpellingQuiz extends JPanel {
 			/* Quiz has completed */
 			FinishedQuizOptionPane finishedQuizOptionPane = new FinishedQuizOptionPane(_wordsCorrectFirstAttempt, this);
 			
-			if (_wordsCorrectFirstAttempt < -1) {
+			if (_wordsCorrectFirstAttempt < 9) {
 				/* User has failed the quiz */
 				finishedQuizOptionPane.failedLevelOptionPane();
 			} else {
@@ -249,6 +249,7 @@ public class SpellingQuiz extends JPanel {
 	public void nextLevel() {
 		_level++;
 		restartLevel();
+		_stats.setLevelShownForTable(_level);
 	}
 
 	public void restartLevel(){
@@ -265,8 +266,9 @@ public class SpellingQuiz extends JPanel {
 	 * use FFMPEG to make a different reward video for the final level.
 	 */
 	public void playFinalRewardVideo() {
-		VideoPlayer videoPlayer = new VideoPlayer(this, true);
-		videoPlayer.playVideoThenGoToNextSpellingQuizLevel();
+		VideoPlayer videoPlayer = new VideoPlayer(this);
+		//videoPlayer.playVideoThenGoToNextSpellingQuizLevel();
+		videoPlayer.playFinalRewardVideo();
 	}
 	
 	// creates the final reward video
@@ -276,7 +278,7 @@ public class SpellingQuiz extends JPanel {
 	}
 
 	private void playVideoAndGoToNextSpellingQuizLevel() {
-		VideoPlayer videoPlayer = new VideoPlayer(this, false);
+		VideoPlayer videoPlayer = new VideoPlayer(this);
 		videoPlayer.playVideoThenGoToNextSpellingQuizLevel();
 	}
 
